@@ -1,3 +1,293 @@
+#homePage {
+  background-color: #79AED5;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#homeNav {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#homeIcon {
+  color: #7E7E7E;
+  position: absolute;
+  transform: scale(4);
+  left: 40px;
+  top: 40px;
+}
+
+#homeIcon:hover {
+  cursor: pointer;
+  color: #606060;
+}
+
+#homeNoti {
+  color: #FF7A00;
+  position: absolute;
+  transform: scale(2);
+  left: 60px;
+  top: 15px;
+}
+
+#homeTooltip {
+  position: absolute;
+  left: 90px;
+  top: 90px;
+}
+
+.homeNavButton {
+  border: 4px solid white;
+  background-color: #3F3D93;
+  color: white;
+  width: 250px;
+  transform: scale(1.4);
+  margin: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.homeNavButton:hover {
+  cursor: pointer;
+  background-color: #5452C6;
+}
+
+.tooltip {
+  min-height: 50px;
+  width: 400px;
+  border: 4px solid #FF7A00;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #D9D9D9;
+  color: black;
+}
+
+#rosterPage {
+  background-color: #0E418D;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+#teamSelect {
+  border-radius: 0;
+  background-color: #BCBCBC;
+  padding: 0px 10px;
+  position: relative;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+#dropSelect {
+  margin-top: 20px;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+}
+
+#dropSelect:hover {
+  cursor: pointer;
+}
+
+#rosterNoti {
+  color: #FF7A00;
+  position: absolute;
+  transform: scale(2);
+  left: 690px;
+  top: 15px;
+}
+
+#rosterTooltip {
+  position: absolute;
+  left: 730px;
+  top: 20px;
+}
+
+#tradePage {
+  background-color: #4571B2;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+
+#doubleCheck {
+  margin-top: 200px;
+  position: absolute;
+  background-color: #D9D9D9;
+  border-radius: 5px;
+  width: 400px;
+  height: 200px;
+  box-shadow: 2px 2px 5px 450px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+#doubleCheckMsg {
+  color: black;
+
+}
+
+#tradeNavCancel {
+  position: absolute;
+  top: 170px;
+  right: 70px;
+  background-color: #7E7E7E;
+  color: white;
+  width: 30%;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+#tradeNavHome {
+  position: absolute;
+  top: 170px;
+  left: 70px;
+  background-color: #7E7E7E;
+  color: white;
+  width: 30%;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+#tradeNavCancel:hover {
+  cursor: pointer;
+  background-color: #696969;
+}
+
+#tradeNavHome:hover {
+  cursor: pointer;
+  background-color: #696969;
+}
+
+#teamSelectLeft {
+  position: absolute;
+  top: 50px;
+  width: 210px;
+  right: 163.5px;
+  border-radius: 0;
+  background-color: #BCBCBC;
+  padding: 0px 10px;
+  position: relative;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+#teamSelectRight {
+  position: absolute;
+  width: 210px;
+  left: 163.5px;
+  top: 50px;
+  border-radius: 0;
+  background-color: #BCBCBC;
+  padding: 0px 10px;
+  position: relative;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+#dropSelectLeft { 
+  position: absolute;
+  top: 20px;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+  width: 200px;
+  left: 330px;
+}
+
+#dropSelectRight {
+  position: absolute;
+  top: 20px;
+  background-color: white;
+  color: black;
+  padding: 5px 15px;
+  width: 200px;
+  right: 330px;
+
+}
+
+#divider {
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background-color: #494949;
+}
+
+#transact {
+  position: absolute;
+  top: 100px;
+  min-height: 500px;
+  width: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+#leftTransact {
+  position: relative;
+  width: 300px;
+  height: 100%;
+  margin-right: 30px;
+}
+
+#rightTransact {
+  position: relative;
+  width: 300px;
+  height: 100%;
+  margin-left: 30px;
+}
+
+.addPlayer {
+  color: #494949;
+  padding: 10px;
+  transform: scale(1.2);
+}
+
+.addPlayer:hover {
+  cursor: pointer;
+}
+
+#addPlayerTooltip {
+  position: absolute;
+  right: 250px;
+  width: 200px;
+}
+
+#playerNoti {
+  position: absolute;
+  color: #FF7A00;
+  top: 10px;
+  right: 220px;
+  transform: scale(2);
+}
+
+#dropLeft {
+  margin-right: 50px;
+}
+
+#dropRight {
+  margin-left: 50px;
+}
+
+li {
+  list-style: none;
+  color: black;
+  background-color: white;
+  padding: 5px 15px;
+  margin: 5px;
+}
+
 .App {
   text-align: center;
 }
