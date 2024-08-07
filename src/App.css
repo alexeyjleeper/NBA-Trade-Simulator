@@ -1,5 +1,8 @@
 #homePage {
-  background-color: #79AED5;
+  background-image: url("../public/homeBackground.jpg");
+  background-size: cover;
+  background-position: 70% center;
+  background-repeat: no-repeat;
   height: 100vh;
   width: 100%;
   display: flex;
@@ -9,52 +12,62 @@
 }
 
 #homeNav {
-  position: absolute;
-  top: 0;
-  left: 0;
+  grid-row: span 1;
+  grid-row: span 1;
+  display: grid;
+  place-items: center;
 }
 
 #homeIcon {
-  color: #7E7E7E;
-  position: absolute;
-  transform: scale(4);
-  left: 40px;
-  top: 40px;
+  color: #656565;
+  width: 70%;
+  height: 70%;
 }
 
 #homeIcon:hover {
   cursor: pointer;
-  color: #606060;
+  color: #383838;
 }
 
 #homeNoti {
-  color: #FF7A00;
+  color: #C70202;
   position: absolute;
-  transform: scale(2);
-  left: 60px;
-  top: 15px;
+  width: 5%;
+  height: 40%;
+  top: 10%;
+  left: 3.6%;
 }
 
 #homeTooltip {
   position: absolute;
   left: 90px;
   top: 90px;
+  z-index: 4;
 }
 
 .homeNavButton {
-  border: 4px solid white;
-  background-color: #3F3D93;
+  display: flex;
   color: white;
-  width: 250px;
-  transform: scale(1.4);
-  margin: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  left: -30%;
+  position: relative;
 }
 
 .homeNavButton:hover {
   cursor: pointer;
-  background-color: #5452C6;
+}
+
+#tbArrow, #vrArrow{
+  margin: auto;
+}
+
+#tradeBuilderButton:hover #tbArrow{
+  transform: translateX(1vw);
+  transition: transform 0.3s ease;
+}
+
+#viewRostersButton:hover #vrArrow{
+  transform: translateX(1vw);
+  transition: transform 0.3s ease;
 }
 
 .tooltip {
@@ -65,6 +78,50 @@
   padding: 10px;
   background-color: #D9D9D9;
   color: black;
+}
+
+#resetContainer {
+  grid-row: span 1;
+  grid-column: span 1;
+  display: grid;
+  justify-items: start;
+  align-items: center;
+}
+
+#resetIcon {
+  color: #656565;
+  position: relative;
+  width: 70%;
+  height: 70%;
+  top: 0;
+}
+
+#resetIcon:hover {
+  cursor: pointer;
+  color: #383838;
+}
+
+#resetTooltip {
+  left: 90px;
+  position: absolute;
+  top: 165px;
+}
+
+#navButtons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: 9vw;
+  grid-template-columns: 9vw 9vw;
+}
+
+@media (max-width: 768px) {
+  #navButtons {
+    grid-template-rows: 20vw;
+    grid-template-columns: 20vw 20vw;
+  }
 }
 
 #rosterPage {
@@ -84,6 +141,11 @@
   position: relative;
   max-height: 150px;
   overflow-y: scroll;
+}
+
+#teamSelect li:hover {
+  cursor: pointer;
+  background-color: #AAAAAA;
 }
 
 #dropSelect {
@@ -180,6 +242,12 @@
   position: relative;
   max-height: 150px;
   overflow-y: scroll;
+  z-index: 4;
+}
+
+#teamSelectLeft li:hover {
+  cursor: pointer;
+  background-color: #AAAAAA;
 }
 
 #teamSelectRight {
@@ -195,6 +263,11 @@
   overflow-y: scroll;
 }
 
+#teamSelectRight li:hover {
+  cursor: pointer;
+  background-color: #AAAAAA;
+}
+
 #dropSelectLeft { 
   position: absolute;
   top: 20px;
@@ -205,6 +278,10 @@
   left: 330px;
 }
 
+#dropSelectLeft:hover {
+  cursor: pointer;
+}
+
 #dropSelectRight {
   position: absolute;
   top: 20px;
@@ -213,7 +290,10 @@
   padding: 5px 15px;
   width: 200px;
   right: 330px;
+}
 
+#dropSelectRight:hover {
+  cursor: pointer;
 }
 
 #divider {
@@ -226,50 +306,81 @@
 #transact {
   position: absolute;
   top: 100px;
-  min-height: 500px;
-  width: 700px;
+  min-height: 450px;
+  width: 900px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: row;
 }
 
-#leftTransact {
+.offer {
+  margin-right: 40px;
+  margin-left: 40px;
+  padding-left: 0;
   position: relative;
   width: 300px;
-  height: 100%;
-  margin-right: 30px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-#rightTransact {
-  position: relative;
-  width: 300px;
-  height: 100%;
-  margin-left: 30px;
+.asset {
+  color: #494949;
+  padding: 10px;
+  transform: scale(1.2);
+  background-color: white;
+  border: grey, solid, 2px;
+}
+
+.delete:hover {
+  cursor: pointer;
 }
 
 .addPlayer {
   color: #494949;
   padding: 10px;
   transform: scale(1.2);
+  background-color: white;
+  border: grey, solid, 2px;
 }
 
 .addPlayer:hover {
   cursor: pointer;
 }
 
+#submit {
+  width: 120px;
+  height: 40px;
+  background-color: #AAAAAA;
+  border: #898989, solid, 2px;
+  border-radius: 2px;
+  position: absolute;
+  bottom: 30px;
+  color: white;
+}
+
+#submit:hover {
+  cursor: pointer;
+  background-color: #6d6c6c;
+  border: #434343, solid, 2px;
+  color: #AAAAAA;
+}
+
 #addPlayerTooltip {
   position: absolute;
-  right: 250px;
+  top: 100px;
+  left: -150px;
   width: 200px;
 }
 
 #playerNoti {
   position: absolute;
   color: #FF7A00;
-  top: 10px;
-  right: 220px;
+  top: 35px;
+  left: 50px;
   transform: scale(2);
+  z-index: 3;
 }
 
 #dropLeft {
@@ -280,6 +391,22 @@
   margin-left: 50px;
 }
 
+#logo {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  border: rgb(33, 48, 97) solid 3px;
+  border-radius: 2px;
+  right: 10px;
+  top: 10px;
+}
+
+#logo img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 li {
   list-style: none;
   color: black;
@@ -288,41 +415,96 @@ li {
   margin: 5px;
 }
 
+#playerSearchPage {
+  background-color: #1A49A4;
+  height: 100vh;
+  width: 100%;
+}
+
+#backNav {
+  width: 100px;
+  height: 100px;
+  left: 0;
+}
+
+#backButton {
+  color: #656565;
+  position: absolute;
+  transform: scale(4);
+  top: 35px;
+  left: 45px;
+}
+
+#backButton:hover {
+  color: #585858;
+}
+
+#searchList {
+  border: red, solid, 0px;
+  width: 600px;
+  max-height: 400px;
+  overflow-y: scroll;
+  margin: 0;
+  left: 30%;
+  position: absolute;
+  padding: 0;
+  top: 145px;
+  border-radius: 1px;
+}
+
+#searchBar {
+  width: 593px;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  left: 368px;
+  height: 40px;
+  font-size: 22px;
+  padding-left: 5px;
+}
+
+.searchItem {
+  height: 40px;
+  margin: 0;
+  color: black;
+  padding: 0;
+  text-align: left;
+  padding-left: 5px;
+  margin-bottom: -5px;
+  font-family: arial;
+  padding-top: 8px;
+}
+
+#searchIcon {
+  color: #454545;
+  position: absolute;
+  transform: scale(2);
+  top: 109px;
+  left: 330px;
+}
+
+#rosterTable {
+  position: absolute;
+  top: 150px;
+  border: orange, solid, 2px;
+  width: 700px;
+  z-index: 0;
+}
+
+.firstRow {
+  font-weight: normal;
+}
+
+td, th {
+  border: grey, solid, 2px;
+}
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

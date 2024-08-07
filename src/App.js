@@ -8,6 +8,9 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 function App() {
 
+  //var to show home notification icon
+  const [homeNoti, setHomeNoti] = useState(true);
+
   //home tooltip variables and functions
   const [homeTooltip, setHomeTooltip] = useState(false);
   const showHomeTooltip = () => {
@@ -20,9 +23,90 @@ function App() {
     setHomeNoti(false);
   }
 
-  //var to show home notification icon
-  const [homeNoti, setHomeNoti] = useState(true);
+  //vars for each side of trade
+  const [leftList, setLeftList] = useState([]);
+  const [rightList, setRightList] = useState([]);
+  
+  //for updating each side of the trade
+  const [currList, setCurrList] = useState('');
 
+  //dropdown selected options for trade page
+  const [selectTeamLeft, setSelectTeamLeft] = useState("Select a team");
+  const [selectTeamRight, setSelectTeamRight] = useState("Select a team");
+
+  const [playerTooltip, setPlayerTooltip] = useState(false);
+  const showPlayerTooltip = () => {
+    setPlayerTooltip(true);
+  }
+
+  const [playerNoti, setPlayerNoti] = useState(true);
+  const hidePlayerNoti = () => {
+    setPlayerNoti(false);
+    setPlayerTooltip(false);
+  }
+
+  //reset icon tool tip visibility variable
+  const [tooltip, setTooltip] = useState(false);
+  const hideTooltip = () => {
+    setTooltip(false);
+  }
+  const showTooltip = () => {
+    setTooltip(true);
+  }
+
+  //for displaying a roster
+  const [roster, setRoster] = useState([]);
+
+  //add players to each side of the trade in the state variables
+  function updateList(event) {
+    if (currList === 'left'){
+        let list = leftList;
+        if (!list.includes(event.target.textContent)) {
+            list.push(event.target.textContent);
+            setLeftList(list)
+        }
+    } else {
+        let list = rightList;
+        if (!list.includes(event.target.textContent)) {
+            list.push(event.target.textContent);
+            setRightList(list)
+        }
+    }
+  }
+
+  //delete trade items from lists
+  function deleteAsset(event) {
+    
+    //get player
+    const removePlayer = event.currentTarget.parentNode.textContent;
+
+    //remove player from list
+    const left = [];
+
+    for (let i of leftList) {
+      left.push(i)
+    }
+
+    const right = rightList;
+    if (left.includes(`${removePlayer}`)) {
+      const newList = [];
+      for (let i in left) {
+        if (i !== removePlayer) {
+          newList.push(i);
+        }
+      }
+      setLeftList(newList)
+    } else if (right.includes(`${removePlayer}`)) {
+      const newList = [];
+      for (let i in right) {
+        if (i !== removePlayer) {
+          newList.push(i);
+        }
+      }
+      setRightList(newList);
+    }
+  }
+  
   return (
     <div className='App'>
       <header className='App-header'>
@@ -32,19 +116,37 @@ function App() {
               element={<HomePage homeTooltip={homeTooltip} 
                                  homeNoti={homeNoti} 
                                  showHomeTooltip={showHomeTooltip} 
-                                 hideHomeTooltip={hideHomeTooltip}/>}>
+                                 hideHomeTooltip={hideHomeTooltip}
+                                 tooltip={tooltip}
+                                 hideTooltip={hideTooltip}
+                                 showTooltip={showTooltip}/>}>
             </Route>
             <Route path='/trade' element={ <TradeBuilder homeTooltip={homeTooltip} 
                                                          homeNoti={homeNoti} 
                                                          showHomeTooltip={showHomeTooltip} 
-                                                         hideHomeTooltip={hideHomeTooltip}/>}>
+                                                         hideHomeTooltip={hideHomeTooltip}
+                                                         leftList = {leftList}
+                                                         rightList = {rightList}
+                                                         setCurrList = {setCurrList}
+                                                         selectTeamLeft={selectTeamLeft}
+                                                         setSelectTeamLeft={setSelectTeamLeft}
+                                                         selectTeamRight={selectTeamRight}
+                                                         setSelectTeamRight={setSelectTeamRight}
+                                                         showPlayerTooltip={showPlayerTooltip}
+                                                         hidePlayerNoti={hidePlayerNoti}
+                                                         playerTooltip={playerTooltip}
+                                                         playerNoti={playerNoti}
+                                                         deleteAsset={deleteAsset}/>}>
             </Route>
             <Route path='/rosters' element={ <Rosters homeTooltip={homeTooltip} 
                                                       homeNoti={homeNoti} 
                                                       showHomeTooltip={showHomeTooltip} 
-                                                      hideHomeTooltip={hideHomeTooltip}/>}>
+                                                      hideHomeTooltip={hideHomeTooltip}
+                                                      roster={roster}
+                                                      setRoster={setRoster}/>}>
             </Route>
-            <Route path='/trade/search' element={<PlayerSearch/>}></Route>
+            <Route path='/trade/search' element={<PlayerSearch updateList={updateList}/>}>
+            </Route>
           </Routes>
         </Router>
       </header>

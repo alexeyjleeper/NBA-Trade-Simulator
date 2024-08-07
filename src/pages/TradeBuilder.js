@@ -1,35 +1,36 @@
 import {React, useState} from 'react';
 import HomeNav from '../components/HomeNav.js';
 import {useNavigate} from 'react-router-dom';
-import {MdRadioButtonChecked} from 'react-icons/md';
+import {MdRadioButtonChecked, MdOutlineAdd} from 'react-icons/md';
+import TradeAsset from '../components/TradeAsset.js';
 
 function TradeBuilder({homeTooltip,
                        homeNoti, 
                        showHomeTooltip, 
                        hideHomeTooltip, 
-                       hideHomeNoti}) {
-    const [selectTeamLeft, setSelectTeamLeft] = useState("Select a team");
+                       hideHomeNoti,
+                       leftList,
+                       rightList,
+                       setCurrList,
+                       selectTeamLeft,
+                       setSelectTeamLeft,
+                       selectTeamRight,
+                       setSelectTeamRight,
+                       showPlayerTooltip,
+                       hidePlayerNoti,
+                       playerTooltip,
+                       playerNoti,
+                       deleteAsset}) {
     const [showDropLeft, setShowDropLeft] = useState(false);
     const changeSelectL = event => {
         setSelectTeamLeft(event.target.dataset.value);
         setShowDropLeft(false);
     }
-    const [selectTeamRight, setSelectTeamRight] = useState("Select a team");
+
     const [showDropRight, setShowDropRight] = useState(false);
     const changeSelectR = event => {
         setSelectTeamRight(event.target.dataset.value);
         setShowDropRight(false);
-    }
-
-    const [playerTooltip, setPlayerTooltip] = useState(false);
-    const showPlayerTooltip = () => {
-        setPlayerTooltip(true);
-    }
-
-    const [playerNoti, setPlayerNoti] = useState(true);
-    const hidePlayerNoti = () => {
-        setPlayerNoti(false);
-        setPlayerTooltip(false);
     }
     
     const [saveCheck, setSaveCheck] = useState(false);
@@ -45,31 +46,97 @@ function TradeBuilder({homeTooltip,
     const navHome = () => {
         navigate('/');
     }
+
+    const navSearchLeft = () => {
+        navigate('/trade/search');
+
+        //so my search page can add to the correct side
+        setCurrList('left');
+    }
+
+    const navSearchRight = () => {
+        navigate('/trade/search');
+        setCurrList('right');
+    }
+
+    async function sendTrade() {
+
+        const url = 'http://localhost:5000/submitTrade';
+
+        //convert lists to 1 json array
+        const data = []
+        for (let i of leftList) {
+
+            //[name, destination] for each item in the array
+            let item = [i, selectTeamRight]
+
+            data.push(item)
+        }
+        for (let i of rightList) {
+            let item = [i, selectTeamLeft]
+            data.push(item)
+        }
+
+        const jsonData = JSON.stringify(data)
+
+        //send request to tradeService
+        console.log('request to tradeService');
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'Application/Json'
+            },
+            body: jsonData
+        })
+        .then(response => response.text())
+        .then(data => {
+
+            if (data === 'success') {
+                console.log('response: ', data);
+                console.log('success');
+            }
+        })
+        .catch(err => {
+            console.log('Trading microservice error: ', err);
+        }); 
+    }
+    
     return(
         <div id='tradePage'>
             <div id='transact'>
-                <div id='leftTransact'>
-                    <div class='addPlayer'>
-                        <div onMouseEnter={showPlayerTooltip} onMouseLeave={hidePlayerNoti}>
-                            + Add Player
+                {playerNoti && (<MdRadioButtonChecked id='playerNoti'
+                                                          onMouseEnter={showPlayerTooltip}
+                                                          onMouseExit={hidePlayerNoti}/>)}
+                
+                <div>
+                    {playerTooltip && (
+                        <div className='tooltip' id = 'addPlayerTooltip'>
+                            Clicking this button will send you to the
+                            player search page. A back button will
+                            allow you to navigate back to this page
+                            if no player is selected.
                         </div>
-                        {playerNoti && (<MdRadioButtonChecked id='playerNoti'/>)}
-                    </div>
-                    <div>
-                        {playerTooltip && (
-                            <div className='tooltip' id = 'addPlayerTooltip'>
-                                Clicking this button will send you to the
-                                player search page. A back button will
-                                allow you to navigate back to this page
-                                if no player is selected.
-                            </div>
-                        )}
-                    </div>
+                    )}
                 </div>
+                <ul class='offer'>
+                    {leftList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
+                    <li class='addPlayer' onClick={navSearchLeft}>
+                        <MdOutlineAdd/>
+                        Add to trade
+                    </li>
+                </ul>
+                <ul class='offer'>
+                    {rightList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
+                    <li class='addPlayer' onClick={navSearchRight}>
+                        <MdOutlineAdd/>
+                        Add to trade
+                    </li>
+                </ul>
                 <div id='divider'></div>
-                <div id='rightTransact'>
-                    <div class='addPlayer'>+ Add Player</div>
-                </div>
+
+            </div>
+            <div id='submit' onClick={sendTrade}>
+                Submit
             </div>
             <div id = 'dropSelectLeft' onClick = {() => setShowDropLeft(true)}>
                 {selectTeamLeft}
@@ -83,7 +150,7 @@ function TradeBuilder({homeTooltip,
                         <li onClick={changeSelectL} data-value='Philadelphia 76ers'>Philadelphia 76ers</li>
                         <li onClick={changeSelectL} data-value='Toronto Raptors'>Toronto Raptors</li>
                         <li onClick={changeSelectL} data-value='Chicago Bulls'>Chicago Bulls</li>
-                        <li onClick={changeSelectL} data-value='Clevland Cavaliers'>Cleveland Cavaliers</li>
+                        <li onClick={changeSelectL} data-value='Cleveland Cavaliers'>Cleveland Cavaliers</li>
                         <li onClick={changeSelectL} data-value='Detroit Pistons'>Detroit Pistons</li>
                         <li onClick={changeSelectL} data-value='Indiana Pacers'>Indiana Pacers</li>
                         <li onClick={changeSelectL} data-value='Milwaukee Bucks'>Milwaukee Bucks</li>
@@ -122,7 +189,7 @@ function TradeBuilder({homeTooltip,
                         <li onClick={changeSelectR} data-value='Philadelphia 76ers'>Philadelphia 76ers</li>
                         <li onClick={changeSelectR} data-value='Toronto Raptors'>Toronto Raptors</li>
                         <li onClick={changeSelectR} data-value='Chicago Bulls'>Chicago Bulls</li>
-                        <li onClick={changeSelectR} data-value='Clevland Cavaliers'>Cleveland Cavaliers</li>
+                        <li onClick={changeSelectR} data-value='Cleveland Cavaliers'>Cleveland Cavaliers</li>
                         <li onClick={changeSelectR} data-value='Detroit Pistons'>Detroit Pistons</li>
                         <li onClick={changeSelectR} data-value='Indiana Pacers'>Indiana Pacers</li>
                         <li onClick={changeSelectR} data-value='Milwaukee Bucks'>Milwaukee Bucks</li>
