@@ -93,12 +93,7 @@ function Rosters({homeTooltip,
     }
     return(
         <div id='rosterPage'>
-            <HomeNav homeTooltip={homeTooltip} 
-                homeNoti={homeNoti} 
-                showHomeTooltip={showHomeTooltip} 
-                hideHomeTooltip={hideHomeTooltip} 
-                hideHomeNoti={hideHomeNoti}
-                homeFunc={navHome}/>
+            <HomeNav homeNoti={homeNoti} homeFunc={navHome}/>
             {logoImg && (
                 <div id='logo'>
                     <img src={logoImg} alt='team logo'/>

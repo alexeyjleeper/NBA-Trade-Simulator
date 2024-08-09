@@ -1,7 +1,7 @@
 import {React} from 'react';
 import {MdRefresh} from 'react-icons/md';
 
-function Reset({tooltip, hideTooltip, showTooltip}) {
+function Reset() {
     
     //function to reset storage of microservices
     async function reset() {
@@ -23,8 +23,8 @@ function Reset({tooltip, hideTooltip, showTooltip}) {
 
     return(
         <div id='resetContainer'>
-            <MdRefresh id='resetIcon' onClick={reset} onMouseEnter={showTooltip} onMouseExit={hideTooltip}/>
-            {tooltip && (<div id='resetTooltip' class='tooltip'>Click to reset rosters</div>)}
+            <MdRefresh id='resetIcon' onClick={reset}/>
+            <div id='resetTooltip' class='tooltip'>Click to reset rosters</div>
         </div>
     )
 }

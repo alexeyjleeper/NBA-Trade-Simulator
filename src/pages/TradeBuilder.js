@@ -216,12 +216,7 @@ function TradeBuilder({homeTooltip,
                     </ul>
                 )}
             </span>
-            <HomeNav homeTooltip={homeTooltip} 
-                homeNoti={homeNoti} 
-                showHomeTooltip={showHomeTooltip} 
-                hideHomeTooltip={hideHomeTooltip} 
-                hideHomeNoti={hideHomeNoti}
-                homeFunc={doubleCheck}/>
+            <HomeNav homeNoti={homeNoti} homeFunc={doubleCheck}/>
             {saveCheck && (
                 <div id='doubleCheck'>
                     <div id='doubleCheckMsg'>

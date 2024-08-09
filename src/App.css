@@ -1,7 +1,6 @@
 #homePage {
   background-image: url("../public/homeBackground.jpg");
-  background-size: cover;
-  background-position: 70% center;
+  background-size: 110%;
   background-repeat: no-repeat;
   height: 100vh;
   width: 100%;
@@ -9,6 +8,13 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  #homePage {
+    background-size: cover;
+    background-position: 70% center;
+  }
 }
 
 #homeNav {
@@ -29,6 +35,11 @@
   color: #383838;
 }
 
+#homeNav:hover #homeTooltip {
+  opacity: 100%;
+  top: 90px;
+}
+
 #homeNoti {
   color: #C70202;
   position: absolute;
@@ -39,9 +50,10 @@
 }
 
 #homeTooltip {
+  opacity: 0%;
   position: absolute;
-  left: 90px;
-  top: 90px;
+  left: 20px;
+  top: -100px;
   z-index: 4;
 }
 
@@ -50,34 +62,44 @@
   color: white;
   left: -30%;
   position: relative;
+  transform: translateX(0) scale(1);
+  transition: transform 0.3s ease;
 }
 
 .homeNavButton:hover {
   cursor: pointer;
+  transform: translateX(0.3vw) scale(1.1);
+  transition: transform 0.25s ease-out;
+}
+
+.homeNavButton p {
+  margin: 2%;
+  white-space: nowrap;
 }
 
 #tbArrow, #vrArrow{
   margin: auto;
+  transform: translateX(0) scale(1);
+  transition: transform 0.3s ease;
 }
 
 #tradeBuilderButton:hover #tbArrow{
-  transform: translateX(1vw);
-  transition: transform 0.3s ease;
+  transform: translateX(1vw) scale(1.1);
+  transition: transform 0.25s ease-out;
 }
 
 #viewRostersButton:hover #vrArrow{
   transform: translateX(1vw);
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease-out;
 }
 
 .tooltip {
   min-height: 50px;
   width: 400px;
-  border: 4px solid #FF7A00;
-  border-radius: 10px;
-  padding: 10px;
-  background-color: #D9D9D9;
-  color: black;
+  padding: 0.7em;
+  background-color: #840000;
+  color: white;
+  font-size: .8em;
 }
 
 #resetContainer {
@@ -86,6 +108,11 @@
   display: grid;
   justify-items: start;
   align-items: center;
+}
+
+#resetContainer:hover #resetTooltip {
+  opacity: 100%;
+  top: 90px;
 }
 
 #resetIcon {
@@ -102,9 +129,10 @@
 }
 
 #resetTooltip {
-  left: 90px;
+  opacity: 0%;
+  left: 120px;
   position: absolute;
-  top: 165px;
+  top: -100px;
 }
 
 #navButtons {
