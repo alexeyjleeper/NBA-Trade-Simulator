@@ -1,8 +1,9 @@
 import {React, useState} from 'react';
 import HomeNav from '../components/HomeNav.js';
 import {useNavigate} from 'react-router-dom';
-import {MdRadioButtonChecked, MdOutlineAdd} from 'react-icons/md';
+import {MdOutlineAdd} from 'react-icons/md';
 import TradeAsset from '../components/TradeAsset.js';
+import Select from 'react-select';
 
 function TradeBuilder({homeTooltip,
                        homeNoti, 
@@ -59,6 +60,62 @@ function TradeBuilder({homeTooltip,
         setCurrList('right');
     }
 
+    const teamSelectStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            color: 'black'
+        }),
+        control: (provided) => ({
+            ...provided,
+            width: '113%',
+            background: 'transparent',
+            border: 'none'
+        }),
+        placeholder: (provided) => ({
+            ...provided,
+            color: 'white',
+            fontFamily: 'Montserrat',
+            whiteSpace: 'nowrap'
+        }),
+        indicatorSeparator: (provided) => ({
+            ...provided,
+            display: 'none'
+        })
+    }
+
+    const teams = [
+        { value: "Atlanta Hawks", label: "Atlanta Hawks"},
+        { value: "Boston Celtics", label: "Boston Celtics"},
+        { value: "Brooklyn Nets", label: "Brooklyn Nets"},
+        { value: "Charlotte Hornets", label: "Charlotte Hornets"},
+        { value: "Chicago Bulls", label: "Chicago Bulls"},
+        { value: "Cleveland Cavaliers", label: "Cleveland Cavaliers"},
+        { value: "Dallas Mavericks", label: "Dallas Mavericks"},
+        { value: "Denver Nuggets", label: "Denver Nuggets"},
+        { value: "Detroit Pistons", label: "Detroit Pistons"},
+        { value: "Golden State Warriors", label: "Golden State Warriors"},
+        { value: "Houston Rockets", label: "Houston Rockets"},
+        { value: "Indiana Pacers", label: "Indiana Pacers"},
+        { value: "Los Angeles Clippers", label: "Los Angeles Clippers"},
+        { value: "Los Angeles Lakers", label: "Los Angeles Lakers"},
+        { value: "Memphis Grizzlies", label: "Memphis Grizzlies"},
+        { value: "Miami Heat", label: "Miami Heat"},
+        { value: "Milwaukee Bucks", label: "Milwaukee Bucks"},
+        { value: "Minnesota Timberwolves", label: "Minnesota Timberwolves"},
+        { value: "New Orleans Pelicans", label: "New Orleans Pelicans"},
+        { value: "New York Knicks", label: "New York Knicks"},
+        { value: "Oklahoma City Thunder", label: "Oklahoma City Thunder"},
+        { value: "Orlando Magic", label: "Orlando Magic"},
+        { value: "Philadelphia Sixers", label: "Philadelphia Sixers"},
+        { value: "Phoenix Suns", label: "Phoenix Suns"},
+        { value: "Portland Trail Blazers", label: "Portland Trail Blazers"},
+        { value: "Sacramento Kings", label: "Sacramento Kings"},
+        { value: "San Antonio Spurs", label: "San Antonio Spurs"},
+        { value: "Toronto Raptors", label: "Toronto Raptors"},
+        { value: "Utah Jazz", label: "Utah Jazz"},
+        { value: "Washington Wizards", label: "Washington Wizards"}
+    ]
+
     async function sendTrade() {
 
         const url = 'http://localhost:5000/submitTrade';
@@ -104,20 +161,8 @@ function TradeBuilder({homeTooltip,
     return(
         <div id='tradePage'>
             <div id='transact'>
-                {playerNoti && (<MdRadioButtonChecked id='playerNoti'
-                                                          onMouseEnter={showPlayerTooltip}
-                                                          onMouseExit={hidePlayerNoti}/>)}
-                
-                <div>
-                    {playerTooltip && (
-                        <div className='tooltip' id = 'addPlayerTooltip'>
-                            Clicking this button will send you to the
-                            player search page. A back button will
-                            allow you to navigate back to this page
-                            if no player is selected.
-                        </div>
-                    )}
-                </div>
+                <Select options={teams} placeholder="Select a Team" styles={teamSelectStyles}/>
+                <Select options={teams} placeholder="Select a Team" styles={teamSelectStyles}/>
                 <ul class='offer'>
                     {leftList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
                     <li class='addPlayer' onClick={navSearchLeft}>
@@ -132,7 +177,6 @@ function TradeBuilder({homeTooltip,
                         Add to trade
                     </li>
                 </ul>
-                <div id='divider'></div>
 
             </div>
             <div id='submit' onClick={sendTrade}>

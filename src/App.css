@@ -96,7 +96,7 @@
 .tooltip {
   min-height: 50px;
   width: 400px;
-  padding: 0.7em;
+  padding: 0.5em;
   background-color: #840000;
   color: white;
   font-size: .8em;
@@ -202,9 +202,11 @@
 }
 
 #tradePage {
-  background-color: #4571B2;
+  background-image: url('../public/tradeBgWithShadow.webp');
+  background-position: center;
+  background-size: cover;
+  width: 100vw;
   height: 100vh;
-  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -324,13 +326,6 @@
   cursor: pointer;
 }
 
-#divider {
-  position: absolute;
-  width: 5px;
-  height: 100%;
-  background-color: #494949;
-}
-
 #transact {
   position: absolute;
   top: 100px;
@@ -340,6 +335,8 @@
   justify-content: center;
   align-items: flex-start;
   flex-direction: row;
+  border: 8px solid;
+  border-image: url('../public/bordertest.png') 20% stretch;
 }
 
 .offer {
@@ -381,7 +378,7 @@
   width: 120px;
   height: 40px;
   background-color: #AAAAAA;
-  border: #898989, solid, 2px;
+  border: grey 5px solid;
   border-radius: 2px;
   position: absolute;
   bottom: 30px;
