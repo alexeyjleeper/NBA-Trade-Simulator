@@ -1,6 +1,5 @@
 import './App.css';
 import HomePage from './pages/HomePage.js';
-import PlayerSearch from './pages/PlayerSearch.js';
 import Rosters from './pages/Rosters.js';
 import TradeBuilder from './pages/TradeBuilder.js';
 import {useState} from 'react';
@@ -144,8 +143,6 @@ function App() {
                                                       hideHomeTooltip={hideHomeTooltip}
                                                       roster={roster}
                                                       setRoster={setRoster}/>}>
-            </Route>
-            <Route path='/trade/search' element={<PlayerSearch updateList={updateList}/>}>
             </Route>
           </Routes>
         </Router>

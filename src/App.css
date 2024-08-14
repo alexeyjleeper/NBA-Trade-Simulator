@@ -328,26 +328,77 @@
 
 #transact {
   position: absolute;
-  top: 100px;
-  min-height: 450px;
-  width: 900px;
+  margin-left: 3%;
+  left: 0;
+  top: 19.5%;
+  width: 60%;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: start;
+  flex-direction: column;
+  border: 5px solid;
+  border-image: url('../public/bordertest.png') stretch;
+  border-image-slice: 48 181 27 178;
+  background-image: url('../public/transactWindowBg.jpg');
+  background-size: cover;
+  box-shadow: 0px 20px 50px -20px black, inset 0px 0px 2px 0px black;
+}
+
+.transactHalf {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  min-height: 28.8vh;
+}
+
+.transactHalfHeader {
+  display: flex;
   flex-direction: row;
-  border: 8px solid;
-  border-image: url('../public/bordertest.png') 20% stretch;
+  height: 5vh;
+  width: 100%;
+  padding: 1%;
+}
+
+.headerArrow {
+  display: block;
+  margin: -0.6% -4% 0 -1%;
+  color: #6184BD;
+  height: 50px;
+  width: 50px;
+  padding: 0;
+}
+
+#header {
+  border: 3px solid;
+  border-image: url('../public/bordertest.png') stretch;
+  border-image-slice: 16 181 27 32;
+  margin: 3% 0 0 3%;
+  width: 97%;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  position: absolute;
+  text-align: start;
+  font-family: 'oswald';
+  font-size: 2.2em;
+  padding: 0 0 0.6% 2%;
+  background-color: white;
+}
+
+#header::before {
+  content: '2024 OFFSEASON TRADE';
+  background-image: url('../public/tradeHeaderTextBg.jpg');
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  overflow: hidden;
+  font-weight: 500;
+  letter-spacing: -0.045em;
 }
 
 .offer {
-  margin-right: 40px;
-  margin-left: 40px;
-  padding-left: 0;
-  position: relative;
-  width: 300px;
-  max-height: 400px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  border: red 2px solid;
 }
 
 .asset {
@@ -363,11 +414,13 @@
 }
 
 .addPlayer {
-  color: #494949;
-  padding: 10px;
-  transform: scale(1.2);
-  background-color: white;
-  border: grey, solid, 2px;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  margin-left: 3vw;
+  text-wrap: nowrap;
 }
 
 .addPlayer:hover {
@@ -377,19 +430,28 @@
 #submit {
   width: 120px;
   height: 40px;
-  background-color: #AAAAAA;
-  border: grey 5px solid;
-  border-radius: 2px;
+  background-image: url('../public/transactSubmitBg.jpg');
+  background-size: cover;
   position: absolute;
-  bottom: 30px;
+  border: solid 3px;
+  top: 76%;
+  left: 0;
   color: white;
+  margin: 3%;
+  border-image: url('../public/bordertest.png') stretch;
+  border-image-slice: 16 591 27 189;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 450;
+  box-shadow: 0px 10px 25px -10px black, inset 0px 0px 2px 0px black;
+
 }
 
 #submit:hover {
   cursor: pointer;
-  background-color: #6d6c6c;
-  border: #434343, solid, 2px;
-  color: #AAAAAA;
+  filter: brightness(70%);
+  transition: 0.1s ease;
 }
 
 #addPlayerTooltip {
@@ -434,10 +496,12 @@
 
 li {
   list-style: none;
-  color: black;
-  background-color: white;
-  padding: 5px 15px;
-  margin: 5px;
+}
+
+ul {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
 }
 
 #playerSearchPage {
