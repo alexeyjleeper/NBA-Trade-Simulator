@@ -1,9 +1,10 @@
-import {React, useState} from 'react';
+import {React, useState, useRef, useEffect} from 'react';
 import HomeNav from '../components/HomeNav.js';
 import {useNavigate} from 'react-router-dom';
 import {MdOutlineAdd, MdArrowRight} from 'react-icons/md';
 import TradeAsset from '../components/TradeAsset.js';
 import Select from 'react-select';
+import TeamColors from '../storage/teamColors.json';
 
 function TradeBuilder({homeTooltip,
                        homeNoti, 
@@ -22,7 +23,96 @@ function TradeBuilder({homeTooltip,
                        playerTooltip,
                        playerNoti,
                        deleteAsset}) {
+    const [mounted, setMounted] = useState();
+    const [bannerImgLeft, setBannerImgLeft] = useState();
+    const [bannerImgRight, setBannerImgRight] = useState();
+    const [bannerLeftBg, setBannerLeftBg] = useState();
+    const [bannerRightBg, setBannerRightBg] = useState();
+    const bannerLeft = useRef(null);
+    const bannerRight = useRef(null);
 
+    const createBannerLeft = (option) => {
+        setBannerColor(setBannerLeftBg, option.label);
+        setBannerImage(option.label, setBannerImgLeft);
+    }
+    
+    const createBannerRight = (option) => {
+        setBannerColor(setBannerRightBg, option.label);
+        setBannerImage(option.label, setBannerImgRight);
+    }
+
+    const setBannerImage = (team, setStateVar) => {
+        const logoQueryTeam = team.replace(/ /g, '_');
+        
+        let url = 'http://localhost:8000/' + logoQueryTeam;
+
+        //request for team logo
+        console.log('request to imgMicroservice');
+        fetch(url, {method: 'GET'})
+            .then(response => {
+                return response.text();
+            })
+            .then(data => {
+
+                //get image from the url
+                fetch(`${data}`, {method: 'GET'})
+                    .then(response => {
+                        console.log('reponse: ', response);
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        const image = URL.createObjectURL(blob);
+                        setStateVar(image);
+                    })
+                    .catch(error => {
+                        // Handle errors
+                        console.log('Error:', error);
+                    });
+            })
+            .catch(error => {
+                // Handle errors
+                console.log('Error:', error);
+            });
+    }
+
+    useEffect(() => {
+        const ref = bannerLeft;
+        const img = new Image()
+        img.src = bannerImgLeft;
+        img.onload = () => {
+            ref.current.style.backgroundColor = bannerLeftBg;
+        }
+        if (mounted && ref.current.style.opacity == 0) {
+            ref.current.style.opacity = "1";
+        }
+        return () => {
+            img.onload = null;
+        }
+    }, [bannerImgLeft]);
+
+    useEffect(() => {
+        const ref = bannerRight
+        const img = new Image()
+        img.src = bannerImgRight;
+        img.onload = () => {
+            ref.current.style.backgroundColor = bannerRightBg;
+        }
+        if (mounted && ref.current.style.opacity == 0) {
+            ref.current.style.opacity = "1";
+        }
+        return () => {
+            img.onload = null;
+        }
+    }, [bannerImgRight]);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const setBannerColor = (setColor, team) => {
+        const color = TeamColors[team];
+        setColor(color);
+    }
     
     const [saveCheck, setSaveCheck] = useState(false);
     const doubleCheck = () => {
@@ -156,32 +246,53 @@ function TradeBuilder({homeTooltip,
         <div id='tradePage'>
             <div id='header'>
             </div>
-            <div id='transact'>
-                <div className='transactHalf'>
-                    <div className="transactHalfHeader">
-                        <MdArrowRight className="headerArrow"/>
-                        <Select className='select' options={teams} placeholder="Select a Team" styles={teamSelectStyles}/>
+            <div id="tradeContent">
+                <div id='transact'>
+                    <div className='transactHalf'>
+                        <div className="transactHalfHeader">
+                            <MdArrowRight className="headerArrow"/>
+                            <Select className='select' 
+                                    options={teams} 
+                                    placeholder="Select a Team" 
+                                    styles={teamSelectStyles}
+                                    onChange={createBannerLeft}/>
+                        </div>
+                        <ul className='offer'>
+                            {leftList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
+                            <li className='addPlayer'>
+                                <MdOutlineAdd/>
+                                Add to trade
+                            </li>
+                        </ul>
                     </div>
-                    <ul className='offer'>
-                        {leftList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                        <li className='addPlayer'>
-                            <MdOutlineAdd/>
-                            Add to trade
-                        </li>
-                    </ul>
+                    <div className='transactHalf'>
+                        <div className="transactHalfHeader">
+                            <MdArrowRight className="headerArrow"/>
+                            <Select className='select' 
+                                    options={teams} 
+                                    placeholder="Select a Team" 
+                                    styles={teamSelectStyles}
+                                    onChange={createBannerRight}/>
+                        </div>
+                        <ul className='offer'>
+                            {rightList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
+                            <li className='addPlayer'>
+                                <MdOutlineAdd/>
+                                Add to trade
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div className='transactHalf'>
-                    <div className="transactHalfHeader">
-                        <MdArrowRight className="headerArrow"/>
-                        <Select className='select' options={teams} placeholder="Select a Team" styles={teamSelectStyles}/>
-                    </div>
-                    <ul className='offer'>
-                        {rightList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                        <li className='addPlayer'>
-                            <MdOutlineAdd/>
-                            Add to trade
-                        </li>
-                    </ul>
+                <div class="banner" 
+                     ref={bannerLeft} 
+                     style={{display: 'block'}}
+                     id="bannerLeft">
+                    <img src={bannerImgLeft} alt="upper team logo"/>
+                </div>
+                <div class="banner" 
+                     ref={bannerRight} 
+                     style={{display: 'block'}}>
+                    <img src={bannerImgRight} alt="lower team logo"/>
                 </div>
             </div>
             <div id='submit' onClick={sendTrade}>

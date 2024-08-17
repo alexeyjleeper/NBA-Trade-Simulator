@@ -23,8 +23,8 @@ function App() {
   }
 
   //vars for each side of trade
-  const [leftList, setLeftList] = useState([]);
-  const [rightList, setRightList] = useState([]);
+  const [leftList, setLeftList] = useState(["Lebron James", "Anthony Davis"]);
+  const [rightList, setRightList] = useState(["Deni Avdija", "Deandre Ayton", "2025 1st Round Pick", "2025 2nd Round Pick"]);
   
   //for updating each side of the trade
   const [currList, setCurrList] = useState('');

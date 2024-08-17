@@ -205,12 +205,44 @@
   background-image: url('../public/tradeBgWithShadow.webp');
   background-position: center;
   background-size: cover;
+  background-repeat: repeat;
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: start;
+  align-items: start;
   flex-direction: column;
+}
+
+.banner {
+  flex: 1;
+  margin-bottom: -70px;
+  background-color: #98002e;
+  box-shadow: inset 0px -20px 200px -70px black;
+  margin-left: 0.2%;
+  overflow: hidden;
+  opacity: 0;
+  align-items: center;
+  border: 2px solid;
+  border-image: url('../public/bordertest.png') stretch;
+  border-image-slice: 16 181 27 32;
+}
+
+#bannerLeft {
+  border-image-slice: 27 424 27 308;
+}
+
+.banner img {
+  width: 80%;
+  margin-top: 10%;
+}
+
+#tradeContent {
+  width: 96.7%;
+  margin-left: 3%;
+  display: flex;
+  flex-direction: row;
+  overflow-y: visible;
 }
 
 #doubleCheck {
@@ -327,10 +359,7 @@
 }
 
 #transact {
-  position: absolute;
-  margin-left: 3%;
-  left: 0;
-  top: 19.5%;
+  position: relative;
   width: 60%;
   display: flex;
   align-items: start;
@@ -341,6 +370,8 @@
   background-image: url('../public/transactWindowBg.jpg');
   background-size: cover;
   box-shadow: 0px 20px 50px -20px black, inset 0px 0px 2px 0px black;
+  font-weight: 450;
+  font-size: 1.2em;
 }
 
 .transactHalf {
@@ -348,20 +379,25 @@
   display: flex;
   flex-direction: column;
   align-items: start;
-  min-height: 28.8vh;
 }
 
 .transactHalfHeader {
   display: flex;
   flex-direction: row;
+  justify-content: start;
+  align-items: center;
   height: 5vh;
   width: 100%;
   padding: 1%;
 }
 
+.offer {
+  padding-bottom: 6vh;
+}
+
 .headerArrow {
   display: block;
-  margin: -0.6% -4% 0 -1%;
+  margin: 0 -4% 0 -1%;
   color: #6184BD;
   height: 50px;
   width: 50px;
@@ -372,12 +408,11 @@
   border: 3px solid;
   border-image: url('../public/bordertest.png') stretch;
   border-image-slice: 16 181 27 32;
-  margin: 3% 0 0 3%;
-  width: 97%;
+  margin: 3% 0 .2% 3%;
+  width: 94.5%;
   left: 0;
   top: 0;
-  z-index: 20;
-  position: absolute;
+  position: relative;
   text-align: start;
   font-family: 'oswald';
   font-size: 2.2em;
@@ -397,20 +432,26 @@
   letter-spacing: -0.045em;
 }
 
-.offer {
-  border: red 2px solid;
-}
-
 .asset {
-  color: #494949;
-  padding: 10px;
-  transform: scale(1.2);
-  background-color: white;
-  border: grey, solid, 2px;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  margin-left: 3vw;
+  text-wrap: nowrap;
 }
 
-.delete:hover {
+.asset p {
+  color: white;
+  display: block;
+  margin: 0 .5vw 0 .5vw;
+  transform: scale(1.5);
+}
+
+.asset:hover {
   cursor: pointer;
+  filter: brightness(70%);
 }
 
 .addPlayer {
@@ -425,6 +466,7 @@
 
 .addPlayer:hover {
   cursor: pointer;
+  filter: brightness(70%);
 }
 
 #submit {
@@ -432,12 +474,10 @@
   height: 40px;
   background-image: url('../public/transactSubmitBg.jpg');
   background-size: cover;
-  position: absolute;
+  position: relative;
   border: solid 3px;
-  top: 76%;
-  left: 0;
   color: white;
-  margin: 3%;
+  margin: 0.2% 0 0 3%;
   border-image: url('../public/bordertest.png') stretch;
   border-image-slice: 16 591 27 189;
   display: flex;
@@ -445,7 +485,7 @@
   justify-content: center;
   font-weight: 450;
   box-shadow: 0px 10px 25px -10px black, inset 0px 0px 2px 0px black;
-
+  font-size: 1em;
 }
 
 #submit:hover {
