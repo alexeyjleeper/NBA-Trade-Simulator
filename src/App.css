@@ -207,7 +207,7 @@
   background-size: cover;
   background-repeat: repeat;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: start;
   align-items: start;
@@ -226,6 +226,7 @@
   border: 2px solid;
   border-image: url('../public/bordertest.png') stretch;
   border-image-slice: 16 181 27 32;
+  filter: saturate(0.7) brightness(1.1);
 }
 
 #bannerLeft {
@@ -356,6 +357,36 @@
 
 #dropSelectRight:hover {
   cursor: pointer;
+}
+
+#assetSelectContainer {
+  background-color: #9C9B9B;
+  position: absolute;
+  z-index: 10;
+  width: 35%;
+  height: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+#overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.assetList {
+  border: blue solid 2px;
 }
 
 #transact {
@@ -568,4 +599,6 @@ td, th {
   min-height: 100vh;
   font-size: calc(10px + 2vmin);
   color: white;
+  overflow: hidden;
+
 }

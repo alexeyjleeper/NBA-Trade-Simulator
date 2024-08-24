@@ -1,35 +1,151 @@
-import {React, useState, useRef, useEffect} from 'react';
+import { v4 } from 'uuid';
+import { React, useState, useRef, useEffect } from 'react';
 import HomeNav from '../components/HomeNav.js';
-import {useNavigate} from 'react-router-dom';
-import {MdOutlineAdd, MdArrowRight} from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { MdOutlineAdd, MdArrowRight } from 'react-icons/md';
 import TradeAsset from '../components/TradeAsset.js';
 import Select from 'react-select';
 import TeamColors from '../storage/teamColors.json';
+import AssetSelect from '../components/AssetSelect.js';
 
-function TradeBuilder({homeTooltip,
-                       homeNoti, 
-                       showHomeTooltip, 
-                       hideHomeTooltip, 
-                       hideHomeNoti,
-                       leftList,
-                       rightList,
-                       setCurrList,
-                       selectTeamLeft,
-                       setSelectTeamLeft,
-                       selectTeamRight,
-                       setSelectTeamRight,
-                       showPlayerTooltip,
-                       hidePlayerNoti,
-                       playerTooltip,
-                       playerNoti,
-                       deleteAsset}) {
+function TradeBuilder({storedTeams}) {
     const [mounted, setMounted] = useState();
     const [bannerImgLeft, setBannerImgLeft] = useState();
     const [bannerImgRight, setBannerImgRight] = useState();
     const [bannerLeftBg, setBannerLeftBg] = useState();
     const [bannerRightBg, setBannerRightBg] = useState();
+    const [topList, setTopList] = useState(["Lebron James", "Anthony Davis"]);
+    const [bottomList, setBottomList] = useState(["Deni Avdija", "Deandre Ayton", "2025 1st Round Pick", "2025 2nd Round Pick"]);
+    const [topAssets, setTopAssets] = useState([[],[]]);
+    const [bottomAssets, setBottomAssets] = useState([[],[]]);
+    const [selectLeft, setSelectLeft] = useState();
+    const [selectRight, setSelectRight] = useState();
+    const [currList, setCurrList] = useState();
+    const [bgSize, setBgSize] = useState('cover');
     const bannerLeft = useRef(null);
     const bannerRight = useRef(null);
+    const assetSelect = useRef(null);
+
+    function sendTrade() {
+        // need to organize data for the put request
+        // need to upadte local variable for the 
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            setBgSize('auto');
+        };
+
+        window.addEventListener('resize', handleResize);
+      
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    function addToAssetList(selectedOption) {
+        if (currList == "top") {
+            setTopList(prev => [...prev, selectedOption.label]);
+        } else {
+            setBottomList(prev => [...prev, selectedOption.label]);
+        }
+        if (assetSelect.current) {
+            assetSelect.current.style.pointerEvents = "none";
+            assetSelect.current.style.opacity = "0";
+        }
+    }                                      
+
+    function deleteAsset(event) {
+    
+        //get player
+        const removePlayer = event.currentTarget.parentNode.textContent;
+
+        const top = topList;
+        const bottom = bottomList;
+
+        if (top.includes(`${removePlayer}`)) {
+            const newList = [];
+            for (let i in top) {
+                if (i !== removePlayer) {
+                    newList.push(i);
+                }
+            }
+            setTopList(newList)
+        } else if (bottom.includes(`${removePlayer}`)) {
+            const newList = [];
+            for (let i in bottom) {
+                if (i !== removePlayer) {
+                    newList.push(i);
+                }
+            }
+            setBottomList(newList);
+        }
+    }
+
+    function getAssets(team) {
+        if (team == null) {
+            console.log('no team selected');
+            return
+        }
+        const uuid = getUUID();
+        const teamToURL = team.replace(/ /g, '+');
+        const stored = isStored(team);
+        const url = `http://localhost:4000/search?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
+        let res = 0;
+        fetch(url, { method: 'GET'})
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                res = data;
+                if (team == selectLeft) {
+                    setCurrList('top');
+                    setTopAssets([[res.Players],[res.Picks]]);
+                    console.log(`players data: ${res.Players}`);
+                    console.log(`top state var: ${topAssets[0]}`);
+                } else if (team == selectRight) {
+                    setCurrList('bottom');
+                    setBottomAssets([[res.Players], [res.Picks]]);
+                }
+
+                // bring up asset select component
+                if (assetSelect.current) {
+                    assetSelect.current.style.pointerEvents = 'auto';
+                    assetSelect.current.style.opacity = '1';
+                }
+
+            })
+            .catch(err => {
+                console.log('Error: ', err);
+            });
+    }
+
+    const isStored = (team) => {
+        return storedTeams.has(team);
+    }
+
+    const getUUID = () => {
+        const uuid = localStorage.getItem('uuid')
+        if (uuid) {
+            return uuid;
+        } else {
+            const newUUID = v4();
+            localStorage.setItem('uuid', newUUID);
+            return newUUID;
+        }
+    }
+
+    function handleSelectTop (option) {
+        createBannerLeft(option);
+        setSelectLeft(option.label);
+        setTopList([]);
+    }
+
+    function handleSelectBot (option) {
+        createBannerRight(option);
+        setSelectRight(option.label);
+        setBottomList([]);
+    }
 
     const createBannerLeft = (option) => {
         setBannerColor(setBannerLeftBg, option.label);
@@ -91,8 +207,8 @@ function TradeBuilder({homeTooltip,
     }, [bannerImgLeft]);
 
     useEffect(() => {
-        const ref = bannerRight
-        const img = new Image()
+        const ref = bannerRight;
+        const img = new Image();
         img.src = bannerImgRight;
         img.onload = () => {
             ref.current.style.backgroundColor = bannerRightBg;
@@ -135,7 +251,7 @@ function TradeBuilder({homeTooltip,
         }),
         option: (provided) => ({
             ...provided,
-            color: 'white'
+            color: 'black'
         }),
         control: (provided, state) => ({
             ...provided,
@@ -153,7 +269,11 @@ function TradeBuilder({homeTooltip,
         dropdownIndicator: (provided) => ({
             ...provided,
             display: 'none'
-          }),        
+          }),   
+        input: (provided) => ({
+            ...provided,
+            caretColor: 'transparent'
+        }),          
         placeholder: (provided) => ({
             ...provided,
             color: 'white',
@@ -190,7 +310,7 @@ function TradeBuilder({homeTooltip,
         { value: "New York Knicks", label: "New York Knicks"},
         { value: "Oklahoma City Thunder", label: "Oklahoma City Thunder"},
         { value: "Orlando Magic", label: "Orlando Magic"},
-        { value: "Philadelphia Sixers", label: "Philadelphia Sixers"},
+        { value: "Philadelphia 76ers", label: "Philadelphia 76ers"},
         { value: "Phoenix Suns", label: "Phoenix Suns"},
         { value: "Portland Trail Blazers", label: "Portland Trail Blazers"},
         { value: "Sacramento Kings", label: "Sacramento Kings"},
@@ -199,51 +319,14 @@ function TradeBuilder({homeTooltip,
         { value: "Utah Jazz", label: "Utah Jazz"},
         { value: "Washington Wizards", label: "Washington Wizards"}
     ]
-
-    async function sendTrade() {
-
-        const url = 'http://localhost:5000/submitTrade';
-
-        //convert lists to 1 json array
-        const data = []
-        for (let i of leftList) {
-
-            //[name, destination] for each item in the array
-            let item = [i, selectTeamRight]
-
-            data.push(item)
-        }
-        for (let i of rightList) {
-            let item = [i, selectTeamLeft]
-            data.push(item)
-        }
-
-        const jsonData = JSON.stringify(data)
-
-        //send request to tradeService
-        console.log('request to tradeService');
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/Json'
-            },
-            body: jsonData
-        })
-        .then(response => response.text())
-        .then(data => {
-
-            if (data === 'success') {
-                console.log('response: ', data);
-                console.log('success');
-            }
-        })
-        .catch(err => {
-            console.log('Trading microservice error: ', err);
-        }); 
-    }
     
     return(
-        <div id='tradePage'>
+        <div id='tradePage' style={{backgroundSize: bgSize}}>
+            <AssetSelect topAssets={topAssets}
+                         bottomAssets={bottomAssets}
+                         currList={currList}
+                         addToList={addToAssetList}
+                         ref={assetSelect}/>
             <div id='header'>
             </div>
             <div id="tradeContent">
@@ -255,11 +338,11 @@ function TradeBuilder({homeTooltip,
                                     options={teams} 
                                     placeholder="Select a Team" 
                                     styles={teamSelectStyles}
-                                    onChange={createBannerLeft}/>
+                                    onChange={handleSelectTop}/>
                         </div>
                         <ul className='offer'>
-                            {leftList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                            <li className='addPlayer'>
+                            {topList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
+                            <li className='addPlayer' onClick={() => getAssets(selectLeft)}>
                                 <MdOutlineAdd/>
                                 Add to trade
                             </li>
@@ -272,11 +355,11 @@ function TradeBuilder({homeTooltip,
                                     options={teams} 
                                     placeholder="Select a Team" 
                                     styles={teamSelectStyles}
-                                    onChange={createBannerRight}/>
+                                    onChange={handleSelectBot}/>
                         </div>
                         <ul className='offer'>
-                            {rightList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                            <li className='addPlayer'>
+                            {bottomList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
+                            <li className='addPlayer' onClick={() => getAssets(selectRight)}>
                                 <MdOutlineAdd/>
                                 Add to trade
                             </li>
@@ -295,10 +378,10 @@ function TradeBuilder({homeTooltip,
                     <img src={bannerImgRight} alt="lower team logo"/>
                 </div>
             </div>
-            <div id='submit' onClick={sendTrade}>
+            <div id='submit'>
                 Submit
             </div>
-            <HomeNav homeNoti={homeNoti} homeFunc={doubleCheck}/>
+            <HomeNav homeFunc={doubleCheck}/>
             {saveCheck && (
                 <div id='doubleCheck'>
                     <div id='doubleCheckMsg'>

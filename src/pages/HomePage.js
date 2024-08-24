@@ -13,6 +13,8 @@ function HomePage({homeTooltip,
                    tooltip,
                    hideTooltip,
                    showTooltip}) {
+                    
+    
     const navigate = useNavigate();
     const navTrade = () => {
         navigate('/trade');
@@ -59,13 +61,13 @@ function HomePage({homeTooltip,
                 <HomeNav homeNoti={homeNoti} homeFunc={navHome}/>
                 <Reset/>
             </div>
-            <div class='homeNavButton'
+            <div className='homeNavButton'
                  id='tradeBuilderButton'
                  onClick={navTrade}>
                 <p>Trade Builder</p>
                 <MdArrowForwardIos id='tbArrow'/>
             </div>
-            <div class='homeNavButton'
+            <div className='homeNavButton'
                  id='viewRostersButton'
                  onClick={navSearch}>
                 <p>View Rosters</p>
