@@ -90,20 +90,7 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
 
     useEffect(() => {
         if (picks) {
-            picks.forEach(pick => {
-                let content = `${pick[0]}`;
-                if (pick[2] == "U") {
-                    content += " Unprotected";
-                } else {
-                    content += " Protected";
-                }
-                if (pick[1] == "1") {
-                    content += " 1st Rnd Pick";
-                } else {
-                    content += " 2nd Rnd Pick";
-                }
-                picksList.push({ label: `${content} `, value: `${pick}` });
-            });
+            picks.forEach(pick => playersList.push({ label: `${pick}`, value: `${pick}` }));
         }
     }, [picks])
     
