@@ -62,8 +62,8 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
     // to set opacity to 0 after click
     const [players, setPlayers] = useState([]);
     const [picks, setPicks] = useState([]);
-    let playersList = [];
-    let picksList = [];
+    const playersList = [];
+    const picksList = [];
 
     useEffect(()=> {
         let loadPlayers = [];
@@ -85,9 +85,6 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
     useEffect(() => {
         if (players) {
             players.forEach(player => playersList.push({ label: `${player}`, value: `${player}` }));
-        }
-        return () => {
-            playersList = [];
         }
     }, [players]);
 
