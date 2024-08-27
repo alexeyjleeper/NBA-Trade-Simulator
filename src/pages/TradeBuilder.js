@@ -1,4 +1,3 @@
-import { v4 } from 'uuid';
 import { React, useState, useRef, useEffect } from 'react';
 import HomeNav from '../components/HomeNav.js';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +7,7 @@ import Select from 'react-select';
 import TeamColors from '../storage/teamColors.json';
 import AssetSelect from '../components/AssetSelect.js';
 
-function TradeBuilder({storedTeams}) {
+function TradeBuilder({uuid}) {
     const [mounted, setMounted] = useState();
     const [bannerImgLeft, setBannerImgLeft] = useState();
     const [bannerImgRight, setBannerImgRight] = useState();
@@ -27,8 +26,91 @@ function TradeBuilder({storedTeams}) {
     const assetSelect = useRef(null);
 
     function sendTrade() {
-        // need to organize data for the put request
-        // need to upadte local variable for the 
+        // initial error handling
+        if (!(selectLeft && selectRight)) {
+            console.log("Teams not selected");
+            return
+        }
+        if (!(topList && bottomList)) {
+            console.log("Missing assets");
+            return
+        }
+
+        //format body values
+        const [newTopRoster, newBottomRoster, newTopPicks, newBottomPicks] = modifyAssets();
+
+        const putData = {
+            "Uuid" : uuid,
+            "TradeTeams" : [selectLeft, selectRight],
+            "NewRosters" : [newTopRoster, newBottomRoster],
+            "Picks" : [newTopPicks, newBottomPicks]
+        }
+        const sendData = JSON.stringify(putData);
+
+        const url = "http://localhost:4000/"
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: sendData
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                console.log("put return");
+                console.log(data);
+                updateDbList();
+            })
+            .catch(error => {
+                console.log(`error fetching from data management API: ${error}`);
+            })
+    }
+
+    function updateDbList() {
+        const teams = localStorage.getItem('dbTeams');
+        const newTeams = JSON.parse(teams) || [];
+        if (!newTeams.includes(selectLeft)) {
+            newTeams.push(selectLeft);
+        }
+        if (!newTeams.includes(selectRight)) {
+            newTeams.push(selectRight);
+        }
+        const toString = JSON.stringify(newTeams);
+        localStorage.setItem('dbTeams', toString);
+    }
+
+    function updateArray(array, removeArray, addArray) {
+        for (const item of removeArray) {
+            //remove first occurrence of item, handle duplicates
+            const index = array.indexOf(item);
+            array.splice(index, 1);
+        }
+
+        for (const item of addArray) {
+            array.push(item);
+        }
+    }
+
+    function modifyAssets(){
+        // update rosters
+        const newTopRoster = topAssets[0];
+        const newBottomRoster = bottomAssets[0];
+        const topListPlayers = topList.filter(item => item[0] !== "2");
+        const bottomListPlayers = bottomList.filter(item => item[0] !== "2");
+        updateArray(newTopRoster, topListPlayers, bottomListPlayers);
+        updateArray(newBottomRoster, bottomListPlayers, topListPlayers);
+
+        // update picks
+        const newTopPicks = topAssets[1];
+        const topPicks = topList.filter(item => item[0] === "2");
+        const newBottomPicks = bottomAssets[1];
+        const bottomPicks = bottomList.filter(item => item[0] === "2");
+        updateArray(newTopPicks, topPicks, bottomPicks);
+        updateArray(newBottomPicks, bottomPicks, topPicks);
+
+        return [newTopRoster, newBottomRoster, newTopPicks, newBottomPicks]
     }
 
     useEffect(() => {
@@ -58,26 +140,19 @@ function TradeBuilder({storedTeams}) {
     function deleteAsset(event) {
     
         //get player
-        const removePlayer = event.currentTarget.parentNode.textContent;
+        const content = event.currentTarget.textContent;
+        console.log('yart');
+        const removePlayer = content.slice(1);
+        console.log(removePlayer)
 
         const top = topList;
         const bottom = bottomList;
 
         if (top.includes(`${removePlayer}`)) {
-            const newList = [];
-            for (let i in top) {
-                if (i !== removePlayer) {
-                    newList.push(i);
-                }
-            }
-            setTopList(newList)
+            const newList = top.filter(item => item !== removePlayer);
+            setTopList(newList);
         } else if (bottom.includes(`${removePlayer}`)) {
-            const newList = [];
-            for (let i in bottom) {
-                if (i !== removePlayer) {
-                    newList.push(i);
-                }
-            }
+            const newList = bottom.filter(item => item !== removePlayer);
             setBottomList(newList);
         }
     }
@@ -87,10 +162,9 @@ function TradeBuilder({storedTeams}) {
             console.log('no team selected');
             return
         }
-        const uuid = getUUID();
         const teamToURL = team.replace(/ /g, '+');
         const stored = isStored(team);
-        const url = `http://localhost:4000/search?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
+        const url = `http://localhost:4000/?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
         let res = 0;
         fetch(url, { method: 'GET'})
             .then(response => {
@@ -100,12 +174,12 @@ function TradeBuilder({storedTeams}) {
                 res = data;
                 if (team == selectLeft) {
                     setCurrList('top');
-                    setTopAssets([[res.Players],[res.Picks]]);
+                    setTopAssets([res.Players, res.Picks]);
                     console.log(`players data: ${res.Players}`);
                     console.log(`top state var: ${topAssets[0]}`);
                 } else if (team == selectRight) {
                     setCurrList('bottom');
-                    setBottomAssets([[res.Players], [res.Picks]]);
+                    setBottomAssets([res.Players, res.Picks]);
                 }
 
                 // bring up asset select component
@@ -121,18 +195,12 @@ function TradeBuilder({storedTeams}) {
     }
 
     const isStored = (team) => {
-        return storedTeams.has(team);
-    }
-
-    const getUUID = () => {
-        const uuid = localStorage.getItem('uuid')
-        if (uuid) {
-            return uuid;
-        } else {
-            const newUUID = v4();
-            localStorage.setItem('uuid', newUUID);
-            return newUUID;
+        const teams = localStorage.getItem('dbTeams');
+        const newTeams = JSON.parse(teams) || [];
+        if (newTeams.includes(team)) {
+            return true;
         }
+        return false;
     }
 
     function handleSelectTop (option) {
@@ -344,7 +412,7 @@ function TradeBuilder({storedTeams}) {
                             {topList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
                             <li className='addPlayer' onClick={() => getAssets(selectLeft)}>
                                 <MdOutlineAdd/>
-                                Add to trade
+                                Add To Trade
                             </li>
                         </ul>
                     </div>
@@ -361,7 +429,7 @@ function TradeBuilder({storedTeams}) {
                             {bottomList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
                             <li className='addPlayer' onClick={() => getAssets(selectRight)}>
                                 <MdOutlineAdd/>
-                                Add to trade
+                                Add To Trade
                             </li>
                         </ul>
                     </div>
@@ -378,9 +446,9 @@ function TradeBuilder({storedTeams}) {
                     <img src={bannerImgRight} alt="lower team logo"/>
                 </div>
             </div>
-            <div id='submit'>
+            <button id='submit' onClick={sendTrade}>
                 Submit
-            </div>
+            </button>
             <HomeNav homeFunc={doubleCheck}/>
             {saveCheck && (
                 <div id='doubleCheck'>
