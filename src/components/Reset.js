@@ -1,29 +1,36 @@
 import {React} from 'react';
 import {MdRefresh} from 'react-icons/md';
 
-function Reset() {
+function Reset({uuid}) {
     
     //function to reset storage of microservices
-    async function reset() {
-
-        //call reset on storage manager service
-        let url = 'http://localhost:8080/reset';
-
-        fetch(url, {method: 'GET'})
-            .then(response => response.text())
-            .then(data => {
-                if (data === 'success'){
-                    console.log('reset successful');
-                }
+    function clear() {
+        const url = 'http://localhost:4000/';
+        const storedTeams = localStorage.getItem('dbTeams');
+        const teams = JSON.parse(storedTeams) || []
+        const sendData = JSON.stringify({ 
+            "Uuid" : uuid,
+            "Teams" : teams
+         });
+        fetch(url, { 
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: sendData
+        })
+            .then(response => {
+                localStorage.setItem('dbTeams', JSON.stringify([]));
+                console.log(`successfully cleared data for user: ${uuid}`);
             })
-            .catch(err => {
-                console.log('Error reseting playerSearch: ', err)
-            });
+            .catch(error => {
+                console.log(`Clear request error when contacting data management API: ${error}`);
+            })
     }
 
     return(
         <div id='resetContainer'>
-            <MdRefresh id='resetIcon' onClick={reset}/>
+            <MdRefresh id='resetIcon' onClick={clear}/>
             <div id='resetTooltip' class='tooltip'>Click to reset rosters</div>
         </div>
     )
