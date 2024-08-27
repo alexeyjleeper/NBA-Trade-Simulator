@@ -5,16 +5,8 @@ import HomeNav from '../components/HomeNav.js';
 import { MdArrowForwardIos } from "react-icons/md";
 import { useMediaQuery } from 'react-responsive';
 
-function HomePage({homeTooltip, 
-                   homeNoti, 
-                   showHomeTooltip, 
-                   hideHomeTooltip, 
-                   hideHomeNoti,
-                   tooltip,
-                   hideTooltip,
-                   showTooltip}) {
+function HomePage({uuid}) {
                     
-    
     const navigate = useNavigate();
     const navTrade = () => {
         navigate('/trade');
@@ -58,8 +50,8 @@ function HomePage({homeTooltip,
     return(
         <div id='homePage' ref={containerRef} style={{...bgPos}}>
             <div id="navButtons">
-                <HomeNav homeNoti={homeNoti} homeFunc={navHome}/>
-                <Reset/>
+                <HomeNav homeFunc={navHome}/>
+                <Reset uuid={uuid}/>
             </div>
             <div className='homeNavButton'
                  id='tradeBuilderButton'

@@ -69,11 +69,11 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
         let loadPlayers = [];
         let loadPicks = [];
         if (currList === "top") {
-            loadPlayers = topAssets[0][0];
-            loadPicks = topAssets[1][0];
+            loadPlayers = topAssets[0];
+            loadPicks = topAssets[1];
         } else if (currList === "bottom") {
-            loadPlayers = bottomAssets[0][0];
-            loadPicks = bottomAssets[1][0];
+            loadPlayers = bottomAssets[0];
+            loadPicks = bottomAssets[1];
         }
 
         // this method, opposed to directly loading in topAssets, works better
@@ -90,7 +90,7 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
 
     useEffect(() => {
         if (picks) {
-            picks.forEach(pick => playersList.push({ label: `${pick}`, value: `${pick}` }));
+            picks.forEach(pick => picksList.push({ label: `${pick}`, value: `${pick}` }));
         }
     }, [picks])
     
@@ -101,11 +101,13 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
                         styles={assetSelectStyles} 
                         placeholder="Players"
                         options={playersList}
+                        value={null}
                         onChange={addToList}/>
                 <Select className="assetSelect" 
                         styles={assetSelectStyles} 
                         placeholder="Draft Picks"
                         options={picksList}
+                        value={null}
                         onChange={addToList}/>
             </div>
         </div>

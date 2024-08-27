@@ -364,7 +364,7 @@
   position: absolute;
   z-index: 10;
   width: 35%;
-  height: 50%;
+  height: 60%;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -395,7 +395,7 @@
   display: flex;
   align-items: start;
   flex-direction: column;
-  border: 5px solid;
+  border: 2px solid;
   border-image: url('../public/bordertest.png') stretch;
   border-image-slice: 48 181 27 178;
   background-image: url('../public/transactWindowBg.jpg');

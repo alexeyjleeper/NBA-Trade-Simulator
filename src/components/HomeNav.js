@@ -1,7 +1,7 @@
 import React from 'react';
 import {MdHome} from 'react-icons/md';
 
-function HomeNav({homeNoti, homeFunc}){
+function HomeNav({homeFunc}){
     return(
         <div id = 'homeNav'>
             <MdHome id = 'homeIcon' onClick={homeFunc}/>
