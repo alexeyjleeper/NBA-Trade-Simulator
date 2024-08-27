@@ -97,11 +97,20 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
         }
     }, [picks])
 
-    console.log('rerender');
+    function exitAssetSelect() {
+        if (ref.current) {
+            ref.current.style.opacity = '0';
+            ref.current.style.pointerEvents = 'none';
+        }
+    }
     
+    function handleInnerClick(event) {
+        event.stopPropagation();
+    }
+
     return(
-        <div id="overlay" ref={ref}>
-            <div id="assetSelectContainer">
+        <div id="overlay" onClick={exitAssetSelect} ref={ref}>
+            <div id="assetSelectContainer" onClick={handleInnerClick}>
                 <Select className="assetSelect" 
                         styles={assetSelectStyles} 
                         placeholder="Players"
