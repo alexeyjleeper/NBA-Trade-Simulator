@@ -13,17 +13,21 @@ function TradeBuilder({uuid}) {
     const [bannerImgRight, setBannerImgRight] = useState();
     const [bannerLeftBg, setBannerLeftBg] = useState();
     const [bannerRightBg, setBannerRightBg] = useState();
-    const [topList, setTopList] = useState(["Lebron James", "Anthony Davis"]);
-    const [bottomList, setBottomList] = useState(["Deni Avdija", "Deandre Ayton", "2025 1st Round Pick", "2025 2nd Round Pick"]);
+    const [topList, setTopList] = useState([]);
+    const [bottomList, setBottomList] = useState([]);
     const [topAssets, setTopAssets] = useState([[],[]]);
     const [bottomAssets, setBottomAssets] = useState([[],[]]);
     const [selectLeft, setSelectLeft] = useState();
     const [selectRight, setSelectRight] = useState();
     const [currList, setCurrList] = useState();
     const [bgSize, setBgSize] = useState('cover');
+    const [topLoaded, setTopLoaded] = useState(false);
+    const [botLoaded, setBotLoaded] = useState(false);
     const bannerLeft = useRef(null);
     const bannerRight = useRef(null);
     const assetSelect = useRef(null);
+    const addTop = useRef(null);
+    const addBot = useRef(null);
 
     function sendTrade() {
         // initial error handling
@@ -62,10 +66,14 @@ function TradeBuilder({uuid}) {
                 console.log("put return");
                 console.log(data);
                 updateDbList();
+                setTopList([]);
+                setBottomList([]);
             })
             .catch(error => {
                 console.log(`error fetching from data management API: ${error}`);
             })
+        
+
     }
 
     function updateDbList() {
@@ -157,9 +165,55 @@ function TradeBuilder({uuid}) {
         }
     }
 
+    useEffect(() => {
+        getAssets(selectLeft);
+    }, [selectLeft])
+
+    useEffect(() => {
+        getAssets(selectRight);
+    }, [selectRight]);
+
+    // handle availability of top "add player button"
+    useEffect(() => {
+        if (topLoaded) {
+            if (addTop.current) {
+                addTop.current.style.pointerEvents = 'auto';
+                addTop.current.style.opacity = '1';
+            }
+        } else {
+            if (addTop.current) {
+                addTop.current.style.pointerEvents = 'none';
+                addTop.current.style.opacity = '0';
+            }
+        }
+    }, [topLoaded]);
+
+    // handle availability of bottom "add player button"
+    useEffect(() => {
+        if (botLoaded) {
+            if (addBot.current) {
+                addBot.current.style.pointerEvents = 'auto';
+                addBot.current.style.color = 'white';
+                addBot.current.style.opacity = '1';
+            }
+        } else {
+            if (addBot.current) {
+                addBot.current.style.pointerEvents = 'none';
+                addBot.current.style.color = '#383838';
+                addBot.current.style.opacity = '0';
+            }
+        }
+    }, [botLoaded]);
+
     function getAssets(team) {
+        //reset the "add player" button's availability
+        if (team == selectLeft) {
+            setTopLoaded(false);
+        } else {
+            setBotLoaded(false);
+        }
+
         if (team == null) {
-            console.log('no team selected');
             return
         }
         const teamToURL = team.replace(/ /g, '+');
@@ -175,23 +229,25 @@ function TradeBuilder({uuid}) {
                 if (team == selectLeft) {
                     setCurrList('top');
                     setTopAssets([res.Players, res.Picks]);
-                    console.log(`players data: ${res.Players}`);
-                    console.log(`top state var: ${topAssets[0]}`);
+                    setTopLoaded(true);
                 } else if (team == selectRight) {
                     setCurrList('bottom');
                     setBottomAssets([res.Players, res.Picks]);
-                }
-
-                // bring up asset select component
-                if (assetSelect.current) {
-                    assetSelect.current.style.pointerEvents = 'auto';
-                    assetSelect.current.style.opacity = '1';
+                    setBotLoaded(true);
                 }
 
             })
             .catch(err => {
                 console.log('Error: ', err);
             });
+    }
+
+    function showAssetSelect(list) {
+        setCurrList(list);
+        if (assetSelect.current) {
+            assetSelect.current.style.pointerEvents = 'auto';
+            assetSelect.current.style.opacity = '1';
+        }
     }
 
     const isStored = (team) => {
@@ -410,7 +466,7 @@ function TradeBuilder({uuid}) {
                         </div>
                         <ul className='offer'>
                             {topList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                            <li className='addPlayer' onClick={() => getAssets(selectLeft)}>
+                            <li className='addPlayer' ref={addTop} onClick={() => showAssetSelect("top")}>
                                 <MdOutlineAdd/>
                                 Add To Trade
                             </li>
@@ -427,7 +483,7 @@ function TradeBuilder({uuid}) {
                         </div>
                         <ul className='offer'>
                             {bottomList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                            <li className='addPlayer' onClick={() => getAssets(selectRight)}>
+                            <li className='addPlayer' ref={addBot} onClick={() => showAssetSelect("bottom")}>
                                 <MdOutlineAdd/>
                                 Add To Trade
                             </li>

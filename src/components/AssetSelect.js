@@ -56,14 +56,15 @@ const assetSelectStyles = {
     })
 }
 
+let playersList = [];
+let picksList = [];
+
 const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, ref) => {
     // gonna need to pass currList, function to add to top, function
     // to add to bottom, array of players, array of picks, also need 
     // to set opacity to 0 after click
     const [players, setPlayers] = useState([]);
     const [picks, setPicks] = useState([]);
-    const playersList = [];
-    const picksList = [];
 
     useEffect(()=> {
         let loadPlayers = [];
@@ -80,6 +81,8 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
         // with react's method of detecting changes in state
         setPlayers(loadPlayers);
         setPicks(loadPicks);
+        picksList = [];
+        playersList = [];
     }, [currList, topAssets, bottomAssets]);
 
     useEffect(() => {
@@ -93,6 +96,8 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
             picks.forEach(pick => picksList.push({ label: `${pick}`, value: `${pick}` }));
         }
     }, [picks])
+
+    console.log('rerender');
     
     return(
         <div id="overlay" ref={ref}>
