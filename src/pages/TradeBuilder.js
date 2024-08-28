@@ -35,6 +35,9 @@ function TradeBuilder({uuid}) {
             console.log("Teams not selected");
             return
         }
+        if (selectLeft === selectRight) {
+            console.log("Please select different teams");
+        }
         if (!(topList && bottomList)) {
             console.log("Missing assets");
             return
@@ -68,11 +71,23 @@ function TradeBuilder({uuid}) {
                 updateDbList();
                 setTopList([]);
                 setBottomList([]);
+
+
+
+                // update assetSeleect
+                getAssets(selectLeft);
+                getAssets(selectRight);
+
+                
             })
             .catch(error => {
                 console.log(`error fetching from data management API: ${error}`);
             })
         
+
+    }
+
+    function updateScoreArrays(data) {
 
     }
 
@@ -112,8 +127,8 @@ function TradeBuilder({uuid}) {
 
         // update picks
         const newTopPicks = topAssets[1];
-        const topPicks = topList.filter(item => item[0] === "2");
         const newBottomPicks = bottomAssets[1];
+        const topPicks = topList.filter(item => item[0] === "2");
         const bottomPicks = bottomList.filter(item => item[0] === "2");
         updateArray(newTopPicks, topPicks, bottomPicks);
         updateArray(newBottomPicks, bottomPicks, topPicks);
@@ -209,6 +224,7 @@ function TradeBuilder({uuid}) {
         //reset the "add player" button's availability
         if (team == selectLeft) {
             setTopLoaded(false);
+            console.log('reset add top button');
         } else {
             setBotLoaded(false);
         }
@@ -235,11 +251,24 @@ function TradeBuilder({uuid}) {
                     setBottomAssets([res.Players, res.Picks]);
                     setBotLoaded(true);
                 }
+                updateLocalScore(team, res.Score);
 
             })
             .catch(err => {
                 console.log('Error: ', err);
             });
+    }
+
+    function updateLocalScore(team, score) {
+        const teamScore = localStorage.getItem(team);
+        const scoreArray = JSON.parse(teamScore) || [];
+        if (scoreArray.length === 0) {
+            localStorage.setItem(team, JSON.stringify([score]));
+        } else {
+            console.dir(score);
+            scoreArray[1] = score;
+            localStorage.setItem(team, JSON.stringify(scoreArray));
+        }
     }
 
     function showAssetSelect(list) {

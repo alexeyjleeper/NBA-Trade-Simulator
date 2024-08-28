@@ -21,11 +21,25 @@ function Reset({uuid}) {
         })
             .then(response => {
                 localStorage.setItem('dbTeams', JSON.stringify([]));
-                console.log(`successfully cleared data for user: ${uuid}`);
+                clearTeamScores();
             })
             .catch(error => {
                 console.log(`Clear request error when contacting data management API: ${error}`);
             })
+    }
+
+    function clearTeamScores() {
+        const keys = []
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key !== "uuid" && key !== "dbTeams") {
+                keys.push(key);
+            }
+        }
+
+        for (const key of keys) {
+            localStorage.setItem(key, JSON.stringify([]));
+        }
     }
 
     return(
