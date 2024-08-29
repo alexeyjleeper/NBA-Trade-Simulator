@@ -1,151 +1,151 @@
-import {React, useState} from 'react';
+import {React, useState, useEffect} from 'react';
 import HomeNav from '../components/HomeNav.js';
-import {MdRadioButtonChecked} from 'react-icons/md';
-import {useNavigate} from 'react-router-dom';
 import RosterTable from '../components/RosterTable.js';
+import Select from 'react-select';
+import ScoreContainer from '../components/ScoreContainer.js';
 
-function Rosters({homeTooltip, 
-                  homeNoti, 
-                  showHomeTooltip, 
-                  hideHomeTooltip, 
-                  hideHomeNoti,
-                  roster,
-                  setRoster}) {
+const rostersStyles = {
+    menu: (provided) => ({
+        ...provided,
+        margin: 0,
+        borderRadius: 0,
+        fontWeight: 450
+    }),
+    menuList: (provided) => ({
+        ...provided,
+        overflowX: 'hidden'
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: 'black'
+    }),
+    option: (provided) => ({
+        ...provided,
+        color: 'black',
+        whiteSpace: 'normal',
+        wordBreak: 'break-word',
+        padding: '5px'
+    }),
+    control: (provided, state) => ({
+        ...provided,
+        fontWeight: '450',
+        width: '100%',
+        background: 'white',
+        color: 'black',
+        boxShadow: 'none',
+        borderColor: state.isFocused ? 'transparent' : 'transparent',
+        cursor: 'pointer',
+        '&:hover': {
+            borderColor: 'transparent',
+            cursor: 'select'
+        },
+        borderRadius: 0
+    }),
+    dropdownIndicator: (provided, state) => ({
+        ...provided,
+        color: state.selectProps.menuIsOpen ? '#363636' : '#575757'
+      }),  
+    input: (provided) => ({
+        ...provided,
+        caretColor: 'transparent'
+    }),      
+    placeholder: (provided) => ({
+        ...provided,
+        color: 'black',
+        fontFamily: 'Montserrat',
+        whiteSpace: 'nowrap',
+        fontWeight: '450'
+    }),
+    indicatorSeparator: (provided) => ({
+        ...provided,
+        display: 'none'
+    })
+}
+
+const teams = [
+    { value: "Atlanta Hawks", label: "Atlanta Hawks"},
+    { value: "Boston Celtics", label: "Boston Celtics"},
+    { value: "Brooklyn Nets", label: "Brooklyn Nets"},
+    { value: "Charlotte Hornets", label: "Charlotte Hornets"},
+    { value: "Chicago Bulls", label: "Chicago Bulls"},
+    { value: "Cleveland Cavaliers", label: "Cleveland Cavaliers"},
+    { value: "Dallas Mavericks", label: "Dallas Mavericks"},
+    { value: "Denver Nuggets", label: "Denver Nuggets"},
+    { value: "Detroit Pistons", label: "Detroit Pistons"},
+    { value: "Golden State Warriors", label: "Golden State Warriors"},
+    { value: "Houston Rockets", label: "Houston Rockets"},
+    { value: "Indiana Pacers", label: "Indiana Pacers"},
+    { value: "Los Angeles Clippers", label: "Los Angeles Clippers"},
+    { value: "Los Angeles Lakers", label: "Los Angeles Lakers"},
+    { value: "Memphis Grizzlies", label: "Memphis Grizzlies"},
+    { value: "Miami Heat", label: "Miami Heat"},
+    { value: "Milwaukee Bucks", label: "Milwaukee Bucks"},
+    { value: "Minnesota Timberwolves", label: "Minnesota Timberwolves"},
+    { value: "New Orleans Pelicans", label: "New Orleans Pelicans"},
+    { value: "New York Knicks", label: "New York Knicks"},
+    { value: "Oklahoma City Thunder", label: "Oklahoma City Thunder"},
+    { value: "Orlando Magic", label: "Orlando Magic"},
+    { value: "Philadelphia 76ers", label: "Philadelphia 76ers"},
+    { value: "Phoenix Suns", label: "Phoenix Suns"},
+    { value: "Portland Trail Blazers", label: "Portland Trail Blazers"},
+    { value: "Sacramento Kings", label: "Sacramento Kings"},
+    { value: "San Antonio Spurs", label: "San Antonio Spurs"},
+    { value: "Toronto Raptors", label: "Toronto Raptors"},
+    { value: "Utah Jazz", label: "Utah Jazz"},
+    { value: "Washington Wizards", label: "Washington Wizards"}
+]
+
+function Rosters({uuid}) {
     const [selectTeam, setSelectTeam] = useState("Select a team");
-    const [showDrop, setShowDrop] = useState(false);
-    const [rosterTooltip, setRosterTooltip] = useState(false);
-    const [rosterNoti, setRosterNoti] = useState(true);
-    const [logoImg, setLogoImg] = useState(false);
+    const [scoreArrays, setScoreArrays] = useState([[]]);
+    const [roster, setRoster] = useState([]);
 
-    const changeSelect = event => {
-        setSelectTeam(event.target.dataset.value);
-        setShowDrop(false);
-        
-        const team = event.target.dataset.value;
-        const logoQueryTeam = team.replace(/ /g, '_');
-        
-        let url = 'http://localhost:8000/' + logoQueryTeam;
-
-        //request for team logo
-        console.log('request to imgMicroservice');
-        fetch(url, {method: 'GET'})
-            .then(response => {
-                return response.text();
-            })
-            .then(data => {
-
-                //get image from the url
-                fetch(`${data}`, {method: 'GET'})
+    useEffect(() => {
+        if (selectTeam !== 'Select a team') {
+            const storedTeams = localStorage.getItem('dbTeams');
+            const teams = JSON.parse(storedTeams);
+            if (teams.includes(selectTeam)) {
+                const storedData = localStorage.getItem(selectTeam);
+                const data = JSON.parse(storedData);
+                setScoreArrays(data[0]);
+                setRoster(data[1]);
+            } else {
+                const team = selectTeam;
+                const teamToURL = team.replace(/ /g, '+');
+                const url = `http://localhost:4000/?uuid=${uuid}&team=${teamToURL}&db=false`;
+                fetch(url, { method: 'GET'})
                     .then(response => {
-                        console.log('reponse: ', response);
-                        return response.blob();
+                        return response.json();
                     })
-                    .then(blob => {
-                        const image = URL.createObjectURL(blob);
-                        setLogoImg(image);
+                    .then(data => {
+                        setScoreArrays([data.Score]);
+                        setRoster(data.Players);
                     })
-                    .catch(error => {
-                        // Handle errors
-                        console.log('Error:', error);
+                    .catch(err => {
+                        console.log('Error: ', err);
                     });
-            })
-            .catch(error => {
-                // Handle errors
-                console.log('Error:', error);
-            });
+            }
+        }
+    }, [selectTeam]);
 
-        const rosterQuery = JSON.stringify([`${team}`]);
-
-        url = 'http://localhost:4000/team';
-
-        //request for roster info
-        console.log('request to playerSearch');
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/Json'
-            },
-            body: rosterQuery
-        })
-            .then(response => {
-                console.log('response: ', response);
-                return response.json();
-            })
-            .then(data => {
-                setRoster(data);
-            })
-            .catch(err => {
-                console.log('Error contacting search /team node: ', err);
-            });
-
+    function updateTeam(selectedOption) {
+        setSelectTeam(selectedOption.label);
     }
+    
 
-    const showRosterTooltip = () => {
-        setRosterTooltip(true);
-    }
-    const hideRosterTooltip = () => {
-        setRosterTooltip(false);
-        setRosterNoti(false);
-    }
-    const navigate = useNavigate();
-    const navHome = () => {
-        navigate('/');
-    }
     return(
         <div id='rosterPage'>
-            <HomeNav homeNoti={homeNoti} homeFunc={navHome}/>
-            {logoImg && (
-                <div id='logo'>
-                    <img src={logoImg} alt='team logo'/>
-                </div>
-            )}
-            <div id ='dropSelect' 
-                onClick = {() => setShowDrop(true)}
-                onMouseEnter={showRosterTooltip} 
-                onMouseLeave={hideRosterTooltip}>
-                {selectTeam}
+            <div className='navButtons'>
+                <HomeNav/>
             </div>
-            {selectTeam !== 'Select a team' && (<RosterTable roster={roster}/>)}
-            {rosterNoti && (<MdRadioButtonChecked id = 'rosterNoti'/>)}
-            {rosterTooltip && (
-                <div class='tooltip' id='rosterTooltip'>
-                    Click to display the dropdown menu and select a team to view the roster.
-                </div>
-            )}
-            {showDrop && (
-                <ul id='teamSelect'>
-                    <li onClick={changeSelect} data-value='Boston Celtics'>Boston Celtics</li>
-                    <li onClick={changeSelect} data-value='Brooklyn Nets'>Brooklyn Nets</li>
-                    <li onClick={changeSelect} data-value='New York Knicks'>New York Knicks</li>
-                    <li onClick={changeSelect} data-value='Philadelphia 76ers'>Philadelphia 76ers</li>
-                    <li onClick={changeSelect} data-value='Toronto Raptors'>Toronto Raptors</li>
-                    <li onClick={changeSelect} data-value='Chicago Bulls'>Chicago Bulls</li>
-                    <li onClick={changeSelect} data-value='Cleveland Cavaliers'>Cleveland Cavaliers</li>
-                    <li onClick={changeSelect} data-value='Detroit Pistons'>Detroit Pistons</li>
-                    <li onClick={changeSelect} data-value='Indiana Pacers'>Indiana Pacers</li>
-                    <li onClick={changeSelect} data-value='Milwaukee Bucks'>Milwaukee Bucks</li>
-                    <li onClick={changeSelect} data-value='Atlanta Hawks'>Atlanta Hawks</li>
-                    <li onClick={changeSelect} data-value='Charlotte Hornets'>Charlotte Hornets</li>
-                    <li onClick={changeSelect} data-value='Miami Heat'>Miami Heat</li>
-                    <li onClick={changeSelect} data-value='Orlando Magic'>Orlando Magic</li>
-                    <li onClick={changeSelect} data-value='Washington Wizards'>Washington Wizards</li>
-                    <li onClick={changeSelect} data-value='Denver Nuggets'>Denver Nuggets</li>
-                    <li onClick={changeSelect} data-value='Minnesota Timberwolves'>Minnesota Timberwolves</li>
-                    <li onClick={changeSelect} data-value='Oklahoma City Thunder'>Oklahoma City Thunder</li>
-                    <li onClick={changeSelect} data-value='Portland Trail Blazers'>Portland Trail Blazers</li>
-                    <li onClick={changeSelect} data-value='Utah Jazz'>Utah Jazz</li>
-                    <li onClick={changeSelect} data-value='Golden State Warriors'>Golden State Warriors</li>
-                    <li onClick={changeSelect} data-value='Los Angeles Clippers'>Los Angeles Clippers</li>
-                    <li onClick={changeSelect} data-value='Los Angeles Lakers'>Los Angeles Lakers</li>
-                    <li onClick={changeSelect} data-value='Phoenix Suns'>Phoenix Suns</li>
-                    <li onClick={changeSelect} data-value='Dallas Mavericks'>Dallas Mavericks</li>
-                    <li onClick={changeSelect} data-value='Houston Rockets'>Houston Rockets</li>
-                    <li onClick={changeSelect} data-value='Sacramento Kings'>Sacramento Kings</li>
-                    <li onClick={changeSelect} data-value='Memphis Grizzlies'>Memphis Grizzlies</li>
-                    <li onClick={changeSelect} data-value='New Orleans Pelicans'>New Orleans Pelicans</li>
-                    <li onClick={changeSelect} data-value='San Antonio Spurs'>San Antonio Spurs</li>
-                </ul>
-            )}
+            <div id='rosterSelectContainer'>
+                <Select styles={rostersStyles} 
+                        options={teams}
+                        onChange={updateTeam}
+                        placeholder="Select a Team"/>
+            </div>
+            <ScoreContainer team={selectTeam} scoreArrays={scoreArrays}/>
+            <RosterTable team={selectTeam} roster={roster}/>
         </div>
     )
 }

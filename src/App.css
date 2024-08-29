@@ -25,14 +25,15 @@
 }
 
 #homeIcon {
-  color: #656565;
+  color: white;
   width: 70%;
   height: 70%;
+  z-index: 8;
 }
 
 #homeIcon:hover {
   cursor: pointer;
-  color: #383838;
+  color: #CECECE;
 }
 
 #homeNav:hover #homeTooltip {
@@ -116,7 +117,7 @@
 }
 
 #resetIcon {
-  color: #656565;
+  color: white;
   position: relative;
   width: 70%;
   height: 70%;
@@ -125,7 +126,7 @@
 
 #resetIcon:hover {
   cursor: pointer;
-  color: #383838;
+  color: #CECECE;
 }
 
 #resetTooltip {
@@ -135,7 +136,7 @@
   top: -100px;
 }
 
-#navButtons {
+.navButtons {
   position: absolute;
   top: 0;
   left: 0;
@@ -160,6 +161,85 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  background-image: url('../public/rosterBgFilter.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+
+}
+
+#rosterSelectContainer {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#scoresContainer {
+  display: flex;
+  flex-direction: row;
+  margin: 0 7% 0 7%;
+  justify-content: center;
+  align-items: center;
+  height: 35%;
+  width: 100%;
+}
+
+.scoreDisplay {
+  width: 12%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  position: relative;
+}
+
+.barContainer {
+  height: 55%;
+  width: auto;
+  margin: 7% 35% 7% 35%;
+  position: relative;
+}
+
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70%;
+  background-color: tan;
+  transition: 1s ease;
+}
+
+.score {
+  position: relative;
+  height: auto;
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.score h1 {
+  font-size: 1em;
+}
+
+.scoreTooltip {
+  position: absolute;
+  bottom: -23%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110%;
+  opacity: 0;
+}
+
+.scoreType {
+  font-size: 0.7em;
+  display: block;
+  white-space: nowrap;
+  font-weight: 550;
+  font-family: 'montserrat';
 }
 
 #teamSelect {
@@ -240,7 +320,7 @@
 
 #tradeContent {
   width: 96.7%;
-  margin-left: 3%;
+  margin-left: 2.8%;
   display: flex;
   flex-direction: row;
   overflow-y: visible;
@@ -439,7 +519,7 @@
   border: 3px solid;
   border-image: url('../public/bordertest.png') stretch;
   border-image-slice: 16 181 27 32;
-  margin: 3% 0 .2% 3%;
+  margin: 7% 0 .2% 2.8%;
   width: 94.5%;
   left: 0;
   top: 0;
@@ -508,7 +588,7 @@
   position: relative;
   border: solid 3px;
   color: white;
-  margin: 0.2% 0 0 3%;
+  margin: 0.2% 0 0 2.8%;
   border-image: url('../public/bordertest.png') stretch;
   border-image-slice: 16 591 27 189;
   display: flex;
@@ -576,11 +656,22 @@ ul {
 }
 
 #rosterTable {
-  position: absolute;
-  top: 150px;
-  border: orange, solid, 2px;
-  width: 700px;
-  z-index: 0;
+  height: 40%;
+  width: 70%;
+  display: grid;
+  grid-template-rows: 20% 20% 20% 20% 20%;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+#rosterTable div {
+  grid-row: span 1;
+  grid-column: span 1;
+  font-size: .7em;
+  display: grid;
+  place-items: center;
+  padding: 3%;
+  font-weight: 550;
+  transition: 1s ease;
 }
 
 .firstRow {

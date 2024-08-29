@@ -1,11 +1,43 @@
 import { React, useState, useRef, useEffect } from 'react';
 import HomeNav from '../components/HomeNav.js';
-import { useNavigate } from 'react-router-dom';
 import { MdOutlineAdd, MdArrowRight } from 'react-icons/md';
 import TradeAsset from '../components/TradeAsset.js';
 import Select from 'react-select';
 import TeamColors from '../storage/teamColors.json';
 import AssetSelect from '../components/AssetSelect.js';
+
+const teams = [
+    { value: "Atlanta Hawks", label: "Atlanta Hawks"},
+    { value: "Boston Celtics", label: "Boston Celtics"},
+    { value: "Brooklyn Nets", label: "Brooklyn Nets"},
+    { value: "Charlotte Hornets", label: "Charlotte Hornets"},
+    { value: "Chicago Bulls", label: "Chicago Bulls"},
+    { value: "Cleveland Cavaliers", label: "Cleveland Cavaliers"},
+    { value: "Dallas Mavericks", label: "Dallas Mavericks"},
+    { value: "Denver Nuggets", label: "Denver Nuggets"},
+    { value: "Detroit Pistons", label: "Detroit Pistons"},
+    { value: "Golden State Warriors", label: "Golden State Warriors"},
+    { value: "Houston Rockets", label: "Houston Rockets"},
+    { value: "Indiana Pacers", label: "Indiana Pacers"},
+    { value: "Los Angeles Clippers", label: "Los Angeles Clippers"},
+    { value: "Los Angeles Lakers", label: "Los Angeles Lakers"},
+    { value: "Memphis Grizzlies", label: "Memphis Grizzlies"},
+    { value: "Miami Heat", label: "Miami Heat"},
+    { value: "Milwaukee Bucks", label: "Milwaukee Bucks"},
+    { value: "Minnesota Timberwolves", label: "Minnesota Timberwolves"},
+    { value: "New Orleans Pelicans", label: "New Orleans Pelicans"},
+    { value: "New York Knicks", label: "New York Knicks"},
+    { value: "Oklahoma City Thunder", label: "Oklahoma City Thunder"},
+    { value: "Orlando Magic", label: "Orlando Magic"},
+    { value: "Philadelphia 76ers", label: "Philadelphia 76ers"},
+    { value: "Phoenix Suns", label: "Phoenix Suns"},
+    { value: "Portland Trail Blazers", label: "Portland Trail Blazers"},
+    { value: "Sacramento Kings", label: "Sacramento Kings"},
+    { value: "San Antonio Spurs", label: "San Antonio Spurs"},
+    { value: "Toronto Raptors", label: "Toronto Raptors"},
+    { value: "Utah Jazz", label: "Utah Jazz"},
+    { value: "Washington Wizards", label: "Washington Wizards"}
+]
 
 function TradeBuilder({uuid}) {
     const [mounted, setMounted] = useState();
@@ -72,23 +104,14 @@ function TradeBuilder({uuid}) {
                 setTopList([]);
                 setBottomList([]);
 
-
-
                 // update assetSeleect
                 getAssets(selectLeft);
                 getAssets(selectRight);
-
-                
             })
             .catch(error => {
                 console.log(`error fetching from data management API: ${error}`);
             })
-        
-
-    }
-
-    function updateScoreArrays(data) {
-
+    
     }
 
     function updateDbList() {
@@ -164,9 +187,7 @@ function TradeBuilder({uuid}) {
     
         //get player
         const content = event.currentTarget.textContent;
-        console.log('yart');
         const removePlayer = content.slice(1);
-        console.log(removePlayer)
 
         const top = topList;
         const bottom = bottomList;
@@ -235,39 +256,36 @@ function TradeBuilder({uuid}) {
         const teamToURL = team.replace(/ /g, '+');
         const stored = isStored(team);
         const url = `http://localhost:4000/?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
-        let res = 0;
         fetch(url, { method: 'GET'})
             .then(response => {
                 return response.json();
             })
             .then(data => {
-                res = data;
                 if (team == selectLeft) {
                     setCurrList('top');
-                    setTopAssets([res.Players, res.Picks]);
+                    setTopAssets([data.Players, data.Picks]);
                     setTopLoaded(true);
                 } else if (team == selectRight) {
                     setCurrList('bottom');
-                    setBottomAssets([res.Players, res.Picks]);
+                    setBottomAssets([data.Players, data.Picks]);
                     setBotLoaded(true);
                 }
-                updateLocalScore(team, res.Score);
-
+                updateLocalTeamData(team, data.Score, data.Players);
             })
             .catch(err => {
                 console.log('Error: ', err);
             });
     }
 
-    function updateLocalScore(team, score) {
-        const teamScore = localStorage.getItem(team);
-        const scoreArray = JSON.parse(teamScore) || [];
-        if (scoreArray.length === 0) {
-            localStorage.setItem(team, JSON.stringify([score]));
+    function updateLocalTeamData(team, score, players) {
+        const teamData = localStorage.getItem(team);
+        const dataArray = JSON.parse(teamData) || [];
+        if (dataArray.length === 0) {
+            localStorage.setItem(team, JSON.stringify([[score], players]));
         } else {
-            console.dir(score);
-            scoreArray[1] = score;
-            localStorage.setItem(team, JSON.stringify(scoreArray));
+            dataArray[0][1] = score;
+            dataArray[1] = players;
+            localStorage.setItem(team, JSON.stringify(dataArray));
         }
     }
 
@@ -379,24 +397,9 @@ function TradeBuilder({uuid}) {
     }, []);
 
     const setBannerColor = (setColor, team) => {
-        const color = TeamColors[team];
+        const color = TeamColors[team][0];
         setColor(color);
     }
-    
-    const [saveCheck, setSaveCheck] = useState(false);
-    const doubleCheck = () => {
-        setSaveCheck(true);
-    }
-    const hideDouble = () => {
-        setSaveCheck(false);
-    }
-    
-    const navigate = useNavigate();
-
-    const navHome = () => {
-        navigate('/');
-    }
-
     const teamSelectStyles = {
         singleValue: (provided) => ({
             ...provided,
@@ -437,44 +440,18 @@ function TradeBuilder({uuid}) {
         indicatorSeparator: (provided) => ({
             ...provided,
             display: 'none'
+        }),
+        menuList: (provided) => ({
+            ...provided,
+            overflowX: 'hidden'
         })
     }
-
-    const teams = [
-        { value: "Atlanta Hawks", label: "Atlanta Hawks"},
-        { value: "Boston Celtics", label: "Boston Celtics"},
-        { value: "Brooklyn Nets", label: "Brooklyn Nets"},
-        { value: "Charlotte Hornets", label: "Charlotte Hornets"},
-        { value: "Chicago Bulls", label: "Chicago Bulls"},
-        { value: "Cleveland Cavaliers", label: "Cleveland Cavaliers"},
-        { value: "Dallas Mavericks", label: "Dallas Mavericks"},
-        { value: "Denver Nuggets", label: "Denver Nuggets"},
-        { value: "Detroit Pistons", label: "Detroit Pistons"},
-        { value: "Golden State Warriors", label: "Golden State Warriors"},
-        { value: "Houston Rockets", label: "Houston Rockets"},
-        { value: "Indiana Pacers", label: "Indiana Pacers"},
-        { value: "Los Angeles Clippers", label: "Los Angeles Clippers"},
-        { value: "Los Angeles Lakers", label: "Los Angeles Lakers"},
-        { value: "Memphis Grizzlies", label: "Memphis Grizzlies"},
-        { value: "Miami Heat", label: "Miami Heat"},
-        { value: "Milwaukee Bucks", label: "Milwaukee Bucks"},
-        { value: "Minnesota Timberwolves", label: "Minnesota Timberwolves"},
-        { value: "New Orleans Pelicans", label: "New Orleans Pelicans"},
-        { value: "New York Knicks", label: "New York Knicks"},
-        { value: "Oklahoma City Thunder", label: "Oklahoma City Thunder"},
-        { value: "Orlando Magic", label: "Orlando Magic"},
-        { value: "Philadelphia 76ers", label: "Philadelphia 76ers"},
-        { value: "Phoenix Suns", label: "Phoenix Suns"},
-        { value: "Portland Trail Blazers", label: "Portland Trail Blazers"},
-        { value: "Sacramento Kings", label: "Sacramento Kings"},
-        { value: "San Antonio Spurs", label: "San Antonio Spurs"},
-        { value: "Toronto Raptors", label: "Toronto Raptors"},
-        { value: "Utah Jazz", label: "Utah Jazz"},
-        { value: "Washington Wizards", label: "Washington Wizards"}
-    ]
     
     return(
         <div id='tradePage' style={{backgroundSize: bgSize}}>
+            <div className='navButtons'>
+                <HomeNav/>
+            </div>
             <AssetSelect topAssets={topAssets}
                          bottomAssets={bottomAssets}
                          currList={currList}
@@ -534,22 +511,7 @@ function TradeBuilder({uuid}) {
             <button id='submit' onClick={sendTrade}>
                 Submit
             </button>
-            <HomeNav homeFunc={doubleCheck}/>
-            {saveCheck && (
-                <div id='doubleCheck'>
-                    <div id='doubleCheckMsg'>
-                        Are you sure you want to return 
-                        to home? Any unsubmitted trades 
-                        will lose all progress.
-                    </div>
-                    <div id='tradeNavCancel' onClick={hideDouble}>
-                        Cancel
-                    </div>
-                    <div id='tradeNavHome' onClick={navHome}>
-                        Home
-                    </div>
-                </div>
-            )}
+            <HomeNav/>
         </div>
     )
 }

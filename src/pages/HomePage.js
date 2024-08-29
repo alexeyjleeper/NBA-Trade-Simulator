@@ -49,8 +49,8 @@ function HomePage({uuid}) {
 
     return(
         <div id='homePage' ref={containerRef} style={{...bgPos}}>
-            <div id="navButtons">
-                <HomeNav homeFunc={navHome}/>
+            <div className='navButtons'>
+                <HomeNav/>
                 <Reset uuid={uuid}/>
             </div>
             <div className='homeNavButton'
