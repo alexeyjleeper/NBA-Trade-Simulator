@@ -3,6 +3,7 @@ import HomeNav from '../components/HomeNav.js';
 import RosterTable from '../components/RosterTable.js';
 import Select from 'react-select';
 import ScoreContainer from '../components/ScoreContainer.js';
+import Teams from '../storage/Teams.js';
 
 const rostersStyles = {
     menu: (provided) => ({
@@ -24,7 +25,9 @@ const rostersStyles = {
         color: 'black',
         whiteSpace: 'normal',
         wordBreak: 'break-word',
-        padding: '5px'
+        padding: '5px',
+        backgroundColor: 'white',
+        cursor: 'pointer'
     }),
     control: (provided, state) => ({
         ...provided,
@@ -37,7 +40,8 @@ const rostersStyles = {
         cursor: 'pointer',
         '&:hover': {
             borderColor: 'transparent',
-            cursor: 'select'
+            cursor: 'select',
+            filter: 'brightness(70%)'
         },
         borderRadius: 0
     }),
@@ -61,39 +65,6 @@ const rostersStyles = {
         display: 'none'
     })
 }
-
-const teams = [
-    { value: "Atlanta Hawks", label: "Atlanta Hawks"},
-    { value: "Boston Celtics", label: "Boston Celtics"},
-    { value: "Brooklyn Nets", label: "Brooklyn Nets"},
-    { value: "Charlotte Hornets", label: "Charlotte Hornets"},
-    { value: "Chicago Bulls", label: "Chicago Bulls"},
-    { value: "Cleveland Cavaliers", label: "Cleveland Cavaliers"},
-    { value: "Dallas Mavericks", label: "Dallas Mavericks"},
-    { value: "Denver Nuggets", label: "Denver Nuggets"},
-    { value: "Detroit Pistons", label: "Detroit Pistons"},
-    { value: "Golden State Warriors", label: "Golden State Warriors"},
-    { value: "Houston Rockets", label: "Houston Rockets"},
-    { value: "Indiana Pacers", label: "Indiana Pacers"},
-    { value: "Los Angeles Clippers", label: "Los Angeles Clippers"},
-    { value: "Los Angeles Lakers", label: "Los Angeles Lakers"},
-    { value: "Memphis Grizzlies", label: "Memphis Grizzlies"},
-    { value: "Miami Heat", label: "Miami Heat"},
-    { value: "Milwaukee Bucks", label: "Milwaukee Bucks"},
-    { value: "Minnesota Timberwolves", label: "Minnesota Timberwolves"},
-    { value: "New Orleans Pelicans", label: "New Orleans Pelicans"},
-    { value: "New York Knicks", label: "New York Knicks"},
-    { value: "Oklahoma City Thunder", label: "Oklahoma City Thunder"},
-    { value: "Orlando Magic", label: "Orlando Magic"},
-    { value: "Philadelphia 76ers", label: "Philadelphia 76ers"},
-    { value: "Phoenix Suns", label: "Phoenix Suns"},
-    { value: "Portland Trail Blazers", label: "Portland Trail Blazers"},
-    { value: "Sacramento Kings", label: "Sacramento Kings"},
-    { value: "San Antonio Spurs", label: "San Antonio Spurs"},
-    { value: "Toronto Raptors", label: "Toronto Raptors"},
-    { value: "Utah Jazz", label: "Utah Jazz"},
-    { value: "Washington Wizards", label: "Washington Wizards"}
-]
 
 function Rosters({uuid}) {
     const [selectTeam, setSelectTeam] = useState("Select a team");
@@ -140,7 +111,7 @@ function Rosters({uuid}) {
             </div>
             <div id='rosterSelectContainer'>
                 <Select styles={rostersStyles} 
-                        options={teams}
+                        options={Teams}
                         onChange={updateTeam}
                         placeholder="Select a Team"/>
             </div>
