@@ -9,8 +9,8 @@ function Reset({uuid}) {
         const storedTeams = localStorage.getItem('dbTeams');
         const teams = JSON.parse(storedTeams) || []
         const sendData = JSON.stringify({ 
-            "Uuid" : uuid,
-            "Teams" : teams
+            'Uuid' : uuid,
+            'Teams' : teams
          });
         fetch(url, { 
             method: 'DELETE',
@@ -32,7 +32,7 @@ function Reset({uuid}) {
         const keys = []
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key !== "uuid" && key !== "dbTeams") {
+            if (key !== 'uuid' && key !== 'dbTeams') {
                 keys.push(key);
             }
         }
@@ -45,7 +45,7 @@ function Reset({uuid}) {
     return(
         <div id='resetContainer'>
             <MdRefresh id='resetIcon' onClick={clear}/>
-            <div id='resetTooltip' class='tooltip'>Click to reset rosters</div>
+            <div id='resetTooltip' className='tooltip'>Click to reset rosters</div>
         </div>
     )
 }

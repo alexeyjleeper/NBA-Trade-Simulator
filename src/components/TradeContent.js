@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect, forwardRef} from 'react';
-import TeamColors from '../storage/teamColors.json';
+import TeamColors from '../storage/TeamColors.js';
 import TradeAsset from '../components/TradeAsset.js';
 import { MdOutlineAdd, MdArrowRight } from 'react-icons/md';
 import Select from 'react-select';
@@ -145,7 +145,7 @@ const TradeContent = forwardRef(({setSelectTop,
             ref.current.style.backgroundColor = bannerLeftBg;
         }
         if (mounted && ref.current.style.opacity == 0) {
-            ref.current.style.opacity = "1";
+            ref.current.style.opacity = '1';
         }
         return () => {
             img.onload = null;
@@ -160,7 +160,7 @@ const TradeContent = forwardRef(({setSelectTop,
             ref.current.style.backgroundColor = bannerRightBg;
         }
         if (mounted && ref.current.style.opacity == 0) {
-            ref.current.style.opacity = "1";
+            ref.current.style.opacity = '1';
         }
         return () => {
             img.onload = null;
@@ -194,51 +194,51 @@ const TradeContent = forwardRef(({setSelectTop,
     }
 
     return (
-        <div id="tradeContent">
+        <div id='tradeContent'>
             <div id='transact'>
                 <div className='transactHalf'>
-                    <div className="transactHalfHeader">
-                        <MdArrowRight className="headerArrow"/>
+                    <div className='transactHalfHeader'>
+                        <MdArrowRight className='headerArrow'/>
                         <Select className='select' 
                                 options={Teams} 
-                                placeholder="Select a Team" 
+                                placeholder='Select a Team' 
                                 styles={teamSelectStyles}
                                 onChange={handleSelectTop}/>
                     </div>
                     <ul className='offer'>
-                        {topList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                        <li className='addPlayer' ref={addTop} onClick={() => showAssetSelect("top")}>
+                        {topList.map((item) => <TradeAsset item={item} deleteAsset={deleteAsset}/>)}
+                        <li className='addPlayer' ref={addTop} onClick={() => showAssetSelect('top')}>
                             <MdOutlineAdd/>
                             Add To Trade
                         </li>
                     </ul>
                 </div>
                 <div className='transactHalf'>
-                    <div className="transactHalfHeader">
-                        <MdArrowRight className="headerArrow"/>
+                    <div className='transactHalfHeader'>
+                        <MdArrowRight className='headerArrow'/>
                         <Select className='select' 
                                 options={Teams} 
-                                placeholder="Select a Team" 
+                                placeholder='Select a Team' 
                                 styles={teamSelectStyles}
                                 onChange={handleSelectBot}/>
                     </div>
                     <ul className='offer'>
-                        {bottomList.map((item, i) => <TradeAsset item={item} key={i} deleteAsset={deleteAsset}/>)}
-                        <li className='addPlayer' ref={addBot} onClick={() => showAssetSelect("bottom")}>
+                        {bottomList.map((item) => <TradeAsset item={item} deleteAsset={deleteAsset}/>)}
+                        <li className='addPlayer' ref={addBot} onClick={() => showAssetSelect('bottom')}>
                             <MdOutlineAdd/>
                             Add To Trade
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="banner" 
+            <div className='banner' 
                     ref={bannerLeft}
-                    id="bannerLeft">
-                <img src={bannerImgLeft} alt="upper team logo"/>
+                    id='bannerLeft'>
+                <img src={bannerImgLeft} alt='upper team logo'/>
             </div>
-            <div class="banner" 
+            <div className='banner' 
                  ref={bannerRight} >
-                <img src={bannerImgRight} alt="lower team logo"/>
+                <img src={bannerImgRight} alt='lower team logo'/>
             </div>
         </div>
     )

@@ -67,7 +67,7 @@ const rostersStyles = {
 }
 
 function Rosters({uuid}) {
-    const [selectTeam, setSelectTeam] = useState("Select a team");
+    const [selectTeam, setSelectTeam] = useState('Select a team');
     const [scoreArrays, setScoreArrays] = useState([[]]);
     const [roster, setRoster] = useState([]);
 
@@ -113,7 +113,7 @@ function Rosters({uuid}) {
                 <Select styles={rostersStyles} 
                         options={Teams}
                         onChange={updateTeam}
-                        placeholder="Select a Team"/>
+                        placeholder='Select a Team'/>
             </div>
             <ScoreContainer team={selectTeam} scoreArrays={scoreArrays}/>
             <RosterTable team={selectTeam} roster={roster}/>

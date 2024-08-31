@@ -29,7 +29,7 @@ function TradeBuilder({uuid}) {
     }, [selectBottom]);
 
     
-    // handle availability of top "add player button"
+    // handle availability of top 'add player button'
     useEffect(() => {
         if (topLoaded) {
             if (addTop.current) {
@@ -44,7 +44,7 @@ function TradeBuilder({uuid}) {
         }
     }, [topLoaded]);
 
-    // handle availability of bottom "add player button"
+    // handle availability of bottom 'add player button'
     useEffect(() => {
         if (botLoaded) {
             if (addBot.current) {
@@ -77,16 +77,16 @@ function TradeBuilder({uuid}) {
         // update rosters
         const newTopRoster = topAssets[0];
         const newBottomRoster = bottomAssets[0];
-        const topListPlayers = topList.filter(item => item[0] !== "2");
-        const bottomListPlayers = bottomList.filter(item => item[0] !== "2");
+        const topListPlayers = topList.filter(item => item[0] !== '2');
+        const bottomListPlayers = bottomList.filter(item => item[0] !== '2');
         updateArray(newTopRoster, topListPlayers, bottomListPlayers);
         updateArray(newBottomRoster, bottomListPlayers, topListPlayers);
 
         // update picks
         const newTopPicks = topAssets[1];
         const newBottomPicks = bottomAssets[1];
-        const topPicks = topList.filter(item => item[0] === "2");
-        const bottomPicks = bottomList.filter(item => item[0] === "2");
+        const topPicks = topList.filter(item => item[0] === '2');
+        const bottomPicks = bottomList.filter(item => item[0] === '2');
         updateArray(newTopPicks, topPicks, bottomPicks);
         updateArray(newBottomPicks, bottomPicks, topPicks);
 
@@ -110,14 +110,14 @@ function TradeBuilder({uuid}) {
     function sendTrade() {
         // initial error handling
         if (!(selectTop && selectBottom)) {
-            console.log("Teams not selected");
+            console.log('Teams not selected');
             return
         }
         if (selectTop === selectBottom) {
-            console.log("Please select different teams");
+            console.log('Please select different teams');
         }
         if (!(topList && bottomList)) {
-            console.log("Missing assets");
+            console.log('Missing assets');
             return
         }
 
@@ -125,14 +125,14 @@ function TradeBuilder({uuid}) {
         const [newTopRoster, newBottomRoster, newTopPicks, newBottomPicks] = modifyAssets();
 
         const putData = {
-            "Uuid" : uuid,
-            "TradeTeams" : [selectTop, selectBottom],
-            "NewRosters" : [newTopRoster, newBottomRoster],
-            "Picks" : [newTopPicks, newBottomPicks]
+            'Uuid' : uuid,
+            'TradeTeams' : [selectTop, selectBottom],
+            'NewRosters' : [newTopRoster, newBottomRoster],
+            'Picks' : [newTopPicks, newBottomPicks]
         }
         const sendData = JSON.stringify(putData);
 
-        const url = "http://localhost:4000/"
+        const url = 'http://localhost:4000/'
         fetch(url, {
             method: 'PUT',
             headers: {
@@ -144,7 +144,7 @@ function TradeBuilder({uuid}) {
                 return response.json()
             })
             .then(data => {
-                console.log("put return");
+                console.log('put return');
                 console.log(data);
 
                 // update list of store teams in local storage
@@ -188,7 +188,7 @@ function TradeBuilder({uuid}) {
     }    
 
     function getAssets(team) {
-        //reset the "add player" button's availability
+        //reset the 'add player' button's availability
         if (team == selectTop) {
             setTopLoaded(false);
             console.log('reset add top button');
@@ -214,7 +214,7 @@ function TradeBuilder({uuid}) {
 
                     setTopAssets([data.Players, data.Picks]);
 
-                    //set loaded to true, to allow "add players" button to become availabe
+                    //set loaded to true, to allow 'add players' button to become availabe
                     setTopLoaded(true);
 
                 } else if (team == selectBottom) {
@@ -224,7 +224,7 @@ function TradeBuilder({uuid}) {
 
                     setBottomAssets([data.Players, data.Picks]);
 
-                    // set loaded to true, to allow "add players" button to become availabe
+                    // set loaded to true, to allow 'add players' button to become availabe
                     setBotLoaded(true);
                 }
                 updateLocalTeamData(team, data.Score, data.Players);
@@ -244,14 +244,14 @@ function TradeBuilder({uuid}) {
 
 
     function addToAssetList(selectedOption) {
-        if (currList == "top") {
+        if (currList == 'top') {
             setTopList(prev => [...prev, selectedOption.label]);
         } else {
             setBottomList(prev => [...prev, selectedOption.label]);
         }
         if (assetSelect.current) {
-            assetSelect.current.style.pointerEvents = "none";
-            assetSelect.current.style.opacity = "0";
+            assetSelect.current.style.pointerEvents = 'none';
+            assetSelect.current.style.opacity = '0';
         }
     }
     

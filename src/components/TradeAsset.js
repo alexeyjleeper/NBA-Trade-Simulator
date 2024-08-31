@@ -1,6 +1,6 @@
 import React from 'react';
 
-function TradeAsset({item, key, deleteAsset}) {
+function TradeAsset({item, deleteAsset}) {
     return(
         <li className='asset' onClick={deleteAsset}>
             <p>

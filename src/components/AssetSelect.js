@@ -69,10 +69,10 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
     useEffect(()=> {
         let loadPlayers = [];
         let loadPicks = [];
-        if (currList === "top") {
+        if (currList === 'top') {
             loadPlayers = topAssets[0];
             loadPicks = topAssets[1];
-        } else if (currList === "bottom") {
+        } else if (currList === 'bottom') {
             loadPlayers = bottomAssets[0];
             loadPicks = bottomAssets[1];
         }
@@ -109,17 +109,17 @@ const AssetSelect = forwardRef(({topAssets, bottomAssets, currList, addToList}, 
     }
 
     return(
-        <div id="overlay" onClick={exitAssetSelect} ref={ref}>
-            <div id="assetSelectContainer" onClick={handleInnerClick}>
-                <Select className="assetSelect" 
+        <div id='overlay' onClick={exitAssetSelect} ref={ref}>
+            <div id='assetSelectContainer' onClick={handleInnerClick}>
+                <Select className='assetSelect' 
                         styles={assetSelectStyles} 
-                        placeholder="Players"
+                        placeholder='Players'
                         options={playersList}
                         value={null}
                         onChange={addToList}/>
-                <Select className="assetSelect" 
+                <Select className='assetSelect' 
                         styles={assetSelectStyles} 
-                        placeholder="Draft Picks"
+                        placeholder='Draft Picks'
                         options={picksList}
                         value={null}
                         onChange={addToList}/>

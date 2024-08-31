@@ -1,10 +1,10 @@
 import React from 'react';
-import TeamColors from '../storage/teamColors.json';
+import TeamColors from '../storage/TeamColors.js';
 
 function RosterTable({team, roster}) {
 
     return(
-        <div id="rosterTable">
+        <div id='rosterTable'>
             {roster.map(item => <div style={{backgroundColor: TeamColors[team][0],
                                              color: TeamColors[team][1]}}>{item}</div>)}
         </div>

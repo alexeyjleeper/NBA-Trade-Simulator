@@ -79,6 +79,11 @@
   transition: transform 0.25s ease-out;
 }
 
+.homeNavButton p {
+  margin: 1%;
+  text-wrap: nowrap;
+}
+
 #tbArrow, #vrArrow{
   margin: auto;
   transform: translateX(0) scale(1);

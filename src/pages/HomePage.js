@@ -2,7 +2,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Reset from '../components/Reset.js';
 import HomeNav from '../components/HomeNav.js';
-import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowForwardIos } from 'react-icons/md';
 import { useMediaQuery } from 'react-responsive';
 
 function HomePage({uuid}) {
@@ -27,16 +27,16 @@ function HomePage({uuid}) {
         const container = containerRef.current;
 
         if (container) {
-            container.addEventListener("mousemove", handleMouseMove);
+            container.addEventListener('mousemove', handleMouseMove);
 
             return () => {
-                container.removeEventListener("mousemove", handleMouseMove);
+                container.removeEventListener('mousemove', handleMouseMove);
             }
         }
     });
 
     // initialization rule is written over if mobile
-    let bgPos = {backgroundPosition: "70% center"};
+    let bgPos = {backgroundPosition: '70% center'};
     if (!isMobile)
         bgPos = {
             backgroundPosition: `${cursorPos.x * -0.02}px ${cursorPos.y * -0.02}px`,
