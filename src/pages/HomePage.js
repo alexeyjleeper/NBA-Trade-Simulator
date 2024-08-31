@@ -6,24 +6,19 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { useMediaQuery } from 'react-responsive';
 
 function HomePage({uuid}) {
-                    
-    const navigate = useNavigate();
-    const navTrade = () => {
-        navigate('/trade');
-    }
-    const navSearch = () => {
-        navigate('/rosters');
-    }
-    const navHome = () => {
-        navigate('/');
-    }
-
     const isMobile = useMediaQuery({maxWidth: 768});
-
     const containerRef = useRef(null);
     const [cursorPos, setCursorPos] = useState({x: 0, y: 0})
+                    
+    const navigate = useNavigate();
+    function navTrade () {
+        navigate('/trade');
+    }
+    function navSearch () {
+        navigate('/rosters');
+    }
     
-    const handleMouseMove = (event) => {
+    function handleMouseMove (event) {
         const { clientX: x, clientY: y} = event;
         setCursorPos({x, y});
     }
@@ -41,7 +36,7 @@ function HomePage({uuid}) {
     });
 
     // initialization rule is written over if mobile
-    let bgPos = {backgroundPosition: "70% cover",};
+    let bgPos = {backgroundPosition: "70% center"};
     if (!isMobile)
         bgPos = {
             backgroundPosition: `${cursorPos.x * -0.02}px ${cursorPos.y * -0.02}px`,

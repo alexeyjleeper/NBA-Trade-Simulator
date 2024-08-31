@@ -71,6 +71,7 @@ function Rosters({uuid}) {
     const [scoreArrays, setScoreArrays] = useState([[]]);
     const [roster, setRoster] = useState([]);
 
+    // handle fetching rosterdata when the user selects a team
     useEffect(() => {
         if (selectTeam !== 'Select a team') {
             const storedTeams = localStorage.getItem('dbTeams');
@@ -102,7 +103,6 @@ function Rosters({uuid}) {
     function updateTeam(selectedOption) {
         setSelectTeam(selectedOption.label);
     }
-    
 
     return(
         <div id='rosterPage'>

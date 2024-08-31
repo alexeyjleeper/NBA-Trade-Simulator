@@ -26,6 +26,7 @@ function ScoreDisplay ({team, initial, current, type}) {
         }
     }
 
+    // change color of progress bar
     let barColor = 'transparent';
     if (team !== "Select a team") {
         barColor = TeamColors[team][0];

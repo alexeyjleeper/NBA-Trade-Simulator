@@ -6,8 +6,8 @@ import TradeContent from '../components/TradeContent.js';
 function TradeBuilder({uuid}) {
     const [topAssets, setTopAssets] = useState([[],[]]);
     const [bottomAssets, setBottomAssets] = useState([[],[]]);
-    const [selectLeft, setSelectLeft] = useState();
-    const [selectRight, setSelectRight] = useState();
+    const [selectTop, setSelectTop] = useState();
+    const [selectBottom, setSelectBottom] = useState();
     const [topList, setTopList] = useState([]);
     const [bottomList, setBottomList] = useState([]);
     const [currList, setCurrList] = useState();
@@ -18,71 +18,48 @@ function TradeBuilder({uuid}) {
     const addTop = useRef(null);
     const addBot = useRef(null);
 
-    function sendTrade() {
-        // initial error handling
-        if (!(selectLeft && selectRight)) {
-            console.log("Teams not selected");
-            return
-        }
-        if (selectLeft === selectRight) {
-            console.log("Please select different teams");
-        }
-        if (!(topList && bottomList)) {
-            console.log("Missing assets");
-            return
-        }
+    // update top team data when a team is selected
+    useEffect(() => {
+        getAssets(selectTop);
+    }, [selectTop])
 
-        //format body values
-        const [newTopRoster, newBottomRoster, newTopPicks, newBottomPicks] = modifyAssets();
+    // update bottom team data when a team is selected
+    useEffect(() => {
+        getAssets(selectBottom);
+    }, [selectBottom]);
 
-        const putData = {
-            "Uuid" : uuid,
-            "TradeTeams" : [selectLeft, selectRight],
-            "NewRosters" : [newTopRoster, newBottomRoster],
-            "Picks" : [newTopPicks, newBottomPicks]
-        }
-        const sendData = JSON.stringify(putData);
-
-        const url = "http://localhost:4000/"
-        fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: sendData
-        })
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                console.log("put return");
-                console.log(data);
-                updateDbList();
-                setTopList([]);
-                setBottomList([]);
-
-                // update assetSeleect
-                getAssets(selectLeft);
-                getAssets(selectRight);
-            })
-            .catch(error => {
-                console.log(`error fetching from data management API: ${error}`);
-            })
     
-    }
+    // handle availability of top "add player button"
+    useEffect(() => {
+        if (topLoaded) {
+            if (addTop.current) {
+                addTop.current.style.pointerEvents = 'auto';
+                addTop.current.style.opacity = '1';
+            }
+        } else {
+            if (addTop.current) {
+                addTop.current.style.pointerEvents = 'none';
+                addTop.current.style.opacity = '0';
+            }
+        }
+    }, [topLoaded]);
 
-    function updateDbList() {
-        const teams = localStorage.getItem('dbTeams');
-        const newTeams = JSON.parse(teams) || [];
-        if (!newTeams.includes(selectLeft)) {
-            newTeams.push(selectLeft);
+    // handle availability of bottom "add player button"
+    useEffect(() => {
+        if (botLoaded) {
+            if (addBot.current) {
+                addBot.current.style.pointerEvents = 'auto';
+                addBot.current.style.color = 'white';
+                addBot.current.style.opacity = '1';
+            }
+        } else {
+            if (addBot.current) {
+                addBot.current.style.pointerEvents = 'none';
+                addBot.current.style.color = '#383838';
+                addBot.current.style.opacity = '0';
+            }
         }
-        if (!newTeams.includes(selectRight)) {
-            newTeams.push(selectRight);
-        }
-        const toString = JSON.stringify(newTeams);
-        localStorage.setItem('dbTeams', toString);
-    }
+    }, [botLoaded]);
 
     function updateArray(array, removeArray, addArray) {
         for (const item of removeArray) {
@@ -116,73 +93,103 @@ function TradeBuilder({uuid}) {
         return [newTopRoster, newBottomRoster, newTopPicks, newBottomPicks]
     }
 
-    useEffect(() => {
-        const handleResize = () => {
-            setBgSize('auto');
-        };
+    function updateDbList() {
+        const teams = localStorage.getItem('dbTeams');
+        const newTeams = JSON.parse(teams) || [];
+        if (!newTeams.includes(selectTop)) {
+            newTeams.push(selectTop);
+        }
+        if (!newTeams.includes(selectBottom)) {
+            newTeams.push(selectBottom);
+        }
+        const toString = JSON.stringify(newTeams);
+        localStorage.setItem('dbTeams', toString);
+    }
 
-        window.addEventListener('resize', handleResize);
-      
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
 
-    function addToAssetList(selectedOption) {
-        if (currList == "top") {
-            setTopList(prev => [...prev, selectedOption.label]);
+    function sendTrade() {
+        // initial error handling
+        if (!(selectTop && selectBottom)) {
+            console.log("Teams not selected");
+            return
+        }
+        if (selectTop === selectBottom) {
+            console.log("Please select different teams");
+        }
+        if (!(topList && bottomList)) {
+            console.log("Missing assets");
+            return
+        }
+
+        //format body values
+        const [newTopRoster, newBottomRoster, newTopPicks, newBottomPicks] = modifyAssets();
+
+        const putData = {
+            "Uuid" : uuid,
+            "TradeTeams" : [selectTop, selectBottom],
+            "NewRosters" : [newTopRoster, newBottomRoster],
+            "Picks" : [newTopPicks, newBottomPicks]
+        }
+        const sendData = JSON.stringify(putData);
+
+        const url = "http://localhost:4000/"
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: sendData
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(data => {
+                console.log("put return");
+                console.log(data);
+
+                // update list of store teams in local storage
+                updateDbList();
+
+                // clear trade lists
+                setTopList([]);
+                setBottomList([]);
+
+                // update assetSeleect
+                getAssets(selectTop);
+                getAssets(selectBottom);
+            })
+            .catch(error => {
+                console.log(`error fetching from data management API: ${error}`);
+            })
+    
+    }    
+    
+    // store updated score and updated list of players in localstorage
+    function updateLocalTeamData(team, score, players) {
+        const teamData = localStorage.getItem(team);
+        const dataArray = JSON.parse(teamData) || [];
+        if (dataArray.length === 0) {
+            localStorage.setItem(team, JSON.stringify([[score], players]));
         } else {
-            setBottomList(prev => [...prev, selectedOption.label]);
+            dataArray[0][1] = score;
+            dataArray[1] = players;
+            localStorage.setItem(team, JSON.stringify(dataArray));
         }
-        if (assetSelect.current) {
-            assetSelect.current.style.pointerEvents = "none";
-            assetSelect.current.style.opacity = "0";
+    }
+
+    // check if the provided team is stored in db
+    function isStored (team) {
+        const teams = localStorage.getItem('dbTeams');
+        const newTeams = JSON.parse(teams) || [];
+        if (newTeams.includes(team)) {
+            return true;
         }
-    }                                      
-
-    useEffect(() => {
-        getAssets(selectLeft);
-    }, [selectLeft])
-
-    useEffect(() => {
-        getAssets(selectRight);
-    }, [selectRight]);
-
-    // handle availability of top "add player button"
-    useEffect(() => {
-        if (topLoaded) {
-            if (addTop.current) {
-                addTop.current.style.pointerEvents = 'auto';
-                addTop.current.style.opacity = '1';
-            }
-        } else {
-            if (addTop.current) {
-                addTop.current.style.pointerEvents = 'none';
-                addTop.current.style.opacity = '0';
-            }
-        }
-    }, [topLoaded]);
-
-    // handle availability of bottom "add player button"
-    useEffect(() => {
-        if (botLoaded) {
-            if (addBot.current) {
-                addBot.current.style.pointerEvents = 'auto';
-                addBot.current.style.color = 'white';
-                addBot.current.style.opacity = '1';
-            }
-        } else {
-            if (addBot.current) {
-                addBot.current.style.pointerEvents = 'none';
-                addBot.current.style.color = '#383838';
-                addBot.current.style.opacity = '0';
-            }
-        }
-    }, [botLoaded]);
+        return false;
+    }    
 
     function getAssets(team) {
         //reset the "add player" button's availability
-        if (team == selectLeft) {
+        if (team == selectTop) {
             setTopLoaded(false);
             console.log('reset add top button');
         } else {
@@ -200,13 +207,24 @@ function TradeBuilder({uuid}) {
                 return response.json();
             })
             .then(data => {
-                if (team == selectLeft) {
+                if (team == selectTop) {
+
+                    // for asset select to get the correct data
                     setCurrList('top');
+
                     setTopAssets([data.Players, data.Picks]);
+
+                    //set loaded to true, to allow "add players" button to become availabe
                     setTopLoaded(true);
-                } else if (team == selectRight) {
+
+                } else if (team == selectBottom) {
+
+                    // for asset select to get the correct data
                     setCurrList('bottom');
+
                     setBottomAssets([data.Players, data.Picks]);
+
+                    // set loaded to true, to allow "add players" button to become availabe
                     setBotLoaded(true);
                 }
                 updateLocalTeamData(team, data.Score, data.Players);
@@ -214,18 +232,6 @@ function TradeBuilder({uuid}) {
             .catch(err => {
                 console.log('Error: ', err);
             });
-    }
-
-    function updateLocalTeamData(team, score, players) {
-        const teamData = localStorage.getItem(team);
-        const dataArray = JSON.parse(teamData) || [];
-        if (dataArray.length === 0) {
-            localStorage.setItem(team, JSON.stringify([[score], players]));
-        } else {
-            dataArray[0][1] = score;
-            dataArray[1] = players;
-            localStorage.setItem(team, JSON.stringify(dataArray));
-        }
     }
 
     function showAssetSelect(list) {
@@ -236,13 +242,17 @@ function TradeBuilder({uuid}) {
         }
     }
 
-    const isStored = (team) => {
-        const teams = localStorage.getItem('dbTeams');
-        const newTeams = JSON.parse(teams) || [];
-        if (newTeams.includes(team)) {
-            return true;
+
+    function addToAssetList(selectedOption) {
+        if (currList == "top") {
+            setTopList(prev => [...prev, selectedOption.label]);
+        } else {
+            setBottomList(prev => [...prev, selectedOption.label]);
         }
-        return false;
+        if (assetSelect.current) {
+            assetSelect.current.style.pointerEvents = "none";
+            assetSelect.current.style.opacity = "0";
+        }
     }
     
     return(
@@ -255,10 +265,10 @@ function TradeBuilder({uuid}) {
                          currList={currList}
                          addToList={addToAssetList}
                          ref={assetSelect}/>
-            <div id='header'>
+            <div id='tradeHeader'>
             </div>
-            <TradeContent setSelectLeft={setSelectLeft}
-                          setSelectRight={setSelectRight}
+            <TradeContent setSelectTop={setSelectTop}
+                          setSelectBottom={setSelectBottom}
                           topList={topList}
                           bottomList={bottomList}
                           setTopList={setTopList}
@@ -269,7 +279,6 @@ function TradeBuilder({uuid}) {
             <button id='submit' onClick={sendTrade}>
                 Submit
             </button>
-            <HomeNav/>
         </div>
     )
 }

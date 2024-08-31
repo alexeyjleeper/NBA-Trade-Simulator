@@ -55,8 +55,8 @@ const teamSelectStyles = {
     })
 };
 
-const TradeContent = forwardRef(({setSelectLeft, 
-                                 setSelectRight,
+const TradeContent = forwardRef(({setSelectTop, 
+                                 setSelectBottom,
                                  topList,
                                  bottomList,
                                  setTopList,
@@ -76,13 +76,13 @@ const TradeContent = forwardRef(({setSelectLeft,
 
     function handleSelectTop (option) {
         createBannerLeft(option.label);
-        setSelectLeft(option.label);
+        setSelectTop(option.label);
         setTopList([]);
     }
 
     function handleSelectBot (option) {
         createBannerRight(option.label);
-        setSelectRight(option.label);
+        setSelectBottom(option.label);
         setBottomList([]);
     }
 
