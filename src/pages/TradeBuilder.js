@@ -11,7 +11,6 @@ function TradeBuilder({uuid}) {
     const [topList, setTopList] = useState([]);
     const [bottomList, setBottomList] = useState([]);
     const [currList, setCurrList] = useState();
-    const [bgSize, setBgSize] = useState('cover');
     const [topLoaded, setTopLoaded] = useState(false);
     const [botLoaded, setBotLoaded] = useState(false);
     const assetSelect = useRef(null);
@@ -256,7 +255,7 @@ function TradeBuilder({uuid}) {
     }
     
     return(
-        <div id='tradePage' style={{backgroundSize: bgSize}}>
+        <div id='tradePage'>
             <div className='navButtons'>
                 <HomeNav/>
             </div>
