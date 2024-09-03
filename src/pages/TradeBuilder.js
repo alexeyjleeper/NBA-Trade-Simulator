@@ -11,7 +11,6 @@ function TradeBuilder({uuid}) {
     const [topList, setTopList] = useState([]);
     const [bottomList, setBottomList] = useState([]);
     const [currList, setCurrList] = useState();
-    const [bgSize, setBgSize] = useState('cover');
     const [topLoaded, setTopLoaded] = useState(false);
     const [botLoaded, setBotLoaded] = useState(false);
     const assetSelect = useRef(null);
@@ -132,7 +131,7 @@ function TradeBuilder({uuid}) {
         }
         const sendData = JSON.stringify(putData);
 
-        const url = 'http://localhost:4000/'
+        const url = 'http://localhost/db/'
         fetch(url, {
             method: 'PUT',
             headers: {
@@ -201,7 +200,7 @@ function TradeBuilder({uuid}) {
         }
         const teamToURL = team.replace(/ /g, '+');
         const stored = isStored(team);
-        const url = `http://localhost:4000/?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
+        const url = `http://localhost/db/?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
         fetch(url, { method: 'GET'})
             .then(response => {
                 return response.json();
@@ -256,7 +255,7 @@ function TradeBuilder({uuid}) {
     }
     
     return(
-        <div id='tradePage' style={{backgroundSize: bgSize}}>
+        <div id='tradePage'>
             <div className='navButtons'>
                 <HomeNav/>
             </div>
