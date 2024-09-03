@@ -131,7 +131,7 @@ function TradeBuilder({uuid}) {
         }
         const sendData = JSON.stringify(putData);
 
-        const url = 'http://localhost:4000/'
+        const url = 'http://localhost/db/'
         fetch(url, {
             method: 'PUT',
             headers: {
@@ -200,7 +200,7 @@ function TradeBuilder({uuid}) {
         }
         const teamToURL = team.replace(/ /g, '+');
         const stored = isStored(team);
-        const url = `http://localhost:4000/?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
+        const url = `http://localhost/db/?uuid=${uuid}&team=${teamToURL}&db=${stored}`;
         fetch(url, { method: 'GET'})
             .then(response => {
                 return response.json();
