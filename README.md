@@ -1,6 +1,7 @@
 # Welcome to the NBA Trade Simulator UI Service
 
-This service manages client-side interation for the NBA trade simulator app.  
+This service manages client-side interation for the NBA trade simulator app.
+ 
 The other microservices used in conjuction with this web app can be found at:  
 [https://github.com/josh-tan77/imgMicroservice](https://github.com/josh-tan77/imgMicroservice)  
 [https://github.com/alexeyjleeper/NBA-Trade-Simulator-DB-Man](https://github.com/alexeyjleeper/NBA-Trade-Simulator-DB-Man)
