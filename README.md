@@ -11,6 +11,9 @@ The other microservices used in conjuction with this web app can be found at:
 
 # Installation
 
+built with:
+node 18.17.1
+
 ## Install Dependencies
 
 >npm install
