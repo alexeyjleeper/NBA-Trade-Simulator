@@ -3,7 +3,7 @@
 This service manages client-side interation for the NBA trade simulator app.  
 The other microservices used in conjuction with this web app can be found at:  
 [https://github.com/josh-tan77/imgMicroservice](https://github.com/josh-tan77/imgMicroservice)  
-[https://github.com/alexeyjleeper/NBA-Trade-Simulator-DB-Mangagement-Service](https://github.com/alexeyjleeper/NBA-Trade-Simulator-DB-Mangagement-Service)
+[https://github.com/alexeyjleeper/NBA-Trade-Simulator-DB-Man](https://github.com/alexeyjleeper/NBA-Trade-Simulator-DB-Man)
 
 # UML Sequence Diagram
 ![UML Sequence Diagram](UML_sequence.jpeg)
