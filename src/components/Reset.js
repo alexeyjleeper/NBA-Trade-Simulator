@@ -5,7 +5,7 @@ function Reset({uuid}) {
     
     //function to reset storage of microservices
     function clear() {
-        const url = 'http://localhost:4000/';
+        const url = 'http://3.235.176.139:8080/';
         const storedTeams = localStorage.getItem('dbTeams');
         const teams = JSON.parse(storedTeams) || []
         const sendData = JSON.stringify({ 

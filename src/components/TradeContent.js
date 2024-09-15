@@ -106,7 +106,7 @@ const TradeContent = forwardRef(({setSelectTop,
     function setBannerImage (team, setStateVar) {
         const logoQueryTeam = team.replace(/ /g, '_');
         
-        let url = 'http://localhost/img/' + logoQueryTeam;
+        let url = 'http://3.235.176.139:8081/' + logoQueryTeam;
 
         //request for team logo
         console.log('request to imgMicroservice');

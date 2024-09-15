@@ -84,7 +84,7 @@ function Rosters({uuid}) {
             } else {
                 const team = selectTeam;
                 const teamToURL = team.replace(/ /g, '+');
-                const url = `http://localhost/db/?uuid=${uuid}&team=${teamToURL}&db=false`;
+                const url = `http://3.235.176.139:8080/?uuid=${uuid}&team=${teamToURL}&db=false`;
                 fetch(url, { method: 'GET'})
                     .then(response => {
                         return response.json();
