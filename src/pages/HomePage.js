@@ -57,7 +57,7 @@ function HomePage({uuid}) {
             <div className='homeNavButton'
                  id='viewRostersButton'
                  onClick={navSearch}>
-                <p>View Rosters</p>
+                <p>Roster Stats</p>
                 <MdArrowForwardIos id='vrArrow'/>
             </div>
         </div>
